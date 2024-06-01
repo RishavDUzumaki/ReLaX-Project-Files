@@ -1,0 +1,144 @@
+\subsection{Getting uniform sampler from a certain Markov Chain}
+\begin{flushleft}
+	So our objective is to generate an $FPRAS$ for approximating the permanent of matrices with non negative entries. For now we will focus on the case of $0-1$ matrices we will show how to generalize for any non-negative matrix at last.
+	Now notice computing the permanent of a $0-1$ matrix is same as counting the number of perfect matchings in the bipartite graph obtained by considering the  matrix $A$ as the bipartite adjeceny matrix whose permanent we want to compute. So we will focus on generating a uniform sampler for the perfect matchings. While doing so we will get a sequence of parameters and  markov chains which are parametrized by these parameters , which we will use to approximate the number of matchings and hence the permanent.
+	
+\end{flushleft}
+
+\begin{flushleft}
+	So given a bipartite graph $\mcG$ on $2n$ vertices we need to get an almost uniform sampler on the perfect matchings of the graph $\mcG$.\\
+	So for making such a sampler we will make a markov chain on the space $\Om = \mcM \cup \mcN $ that is union of perfect matchings and near perfect matchings. (We denote $\mcM$ to be set of all perfect matchings possible on $K_{n,n}$ and $\mcN$ to be the set of all near perfect matchings possible on $K_{n,n}$ ) where the probability to land on a valid matching $M$ that is $M\in \mcM_{\mcG}$,($\mcM_{\mcG}$ is the set of all valid perfect matchings on $\mcG$) in the stationary probability distribution of the markov chain is quite high like $\Omega(\frac{1}{n^2})$ and is uniform on the set $\mcM_{\mcG}$.In other words, we will get a markov chain $MC$ with state space being $\Om$ as defined above such that
+	$$\pi_{MC}(\mcM_{\mcG} )\geq \frac{1}{(4n^2+1)} = \Omega(1/n^2)$$
+	   After getting such a markov chain we use the following algorithm to get an almost uniform sampler for the perfect matchings of $\mcG$.
+\end{flushleft}
+\begin{flushleft}
+	Set $\hat{\delta} \leftarrow \delta /\left(12 n^2+3\right)$.\\
+	Repeat $T=\left\lceil\left(6 n^2+2\right) \ln (3 / \delta)\right\rceil$ times:\\
+	\parinn Simulate the Markov chain for $\tau(\hat{\delta})$ steps;\\ output the final state if it belongs to $\mathcal{M_{\mcG}}$ and halt.\\ \parinf Output an arbitrary perfect matching if all trials fail.
+\end{flushleft}
+\begin{flushleft}
+	Now consider a subset $S\subseteq \mcM_{\mcG}$ now note the following, for the final output $M$ 
+	\begin{align*}
+		\operatorname{Pr}(M \in \mathcal{S}) & \geq \frac{\hat{\pi}(\mathcal{S})}{\hat{\pi}(\mathcal{M}_G)}-(1-\hat{\pi}(\mathcal{M}_G))^T \\
+		& \geq \frac{\pi(\mathcal{S})-\hat{\delta}}{\pi(\mathcal{M}_G)+\hat{\delta}}-\exp (-\hat{\pi}(\mathcal{M}_G) T) \\
+		& \geq \frac{\pi(\mathcal{S})}{\pi(\mathcal{M}_G)}-\frac{2 \hat{\delta}}{\pi(\mathcal{M}_G)}-\exp (-(\pi(\mathcal{M}_G)-\hat{\delta}) T) \\
+		& \geq \frac{\pi(\mathcal{S})}{\pi(\mathcal{M}_G)}-\frac{2 \delta}{3}-\frac{\delta}{3}
+	\end{align*}
+\end{flushleft}
+Hence we get an almost uniform sampler on the perfect matchings of $\mcG$ using the promised Markov Chain.
+\subsection{Designing the desired Markov Chain}
+Now we wish to design the markov chain on the set $\Om=\mcM \cup \mcN$ whose stationary probability distribution $\pi$ has the property that when restricted to elements of $\mcM_G$ it is uniform and $\pi(\mcM_G) $ (which is $\sum_{M\in \mcM_G} \pi(M)$)$\geq \frac{1}{(4n^2+1)}$.\\
+\begin{flushleft}
+	For designing this Markov chain we will define a sequence of parameters each parameter will describe a markov chain which will be used to determine the parameters for the next iteration.\\
+	So we have parameters $\lambda(u,v)$ and $w(u,v)$ for each pair $(u,v) $ where $u\in V_1(G)$ and $v \in V_2(G)$. 
+	\\
+	So initially $\lambda(u,v)=1, w(u,v)=n ,\forall (u,v) \in V_1 \times V_2 $, then progressively we would make $\lambda(u,v)=1/n!$ if $(u,v)\notin E(G)$ and $\lambda(u,v)=1$ if $(u,v) \in E(G)$. We will have the stationary distribution of markov chains propotional to the product of $\lambda$'s of edges (at that stage) contained in the matching. So the weight of invalid perfect matchings and invalid near perfect matchings in the stationary distribution of the final markov chain would be very low. We will give details of how we iterate and how the parameters are modified in the following paragraph.
+\end{flushleft}
+\begin{itemize}
+\item \begin{flushleft}
+So again we denote the value of $\lambda(u,v)$ at iteration $i$ to be $\lambda_i(u,v)$.\\
+Also we define $\lambda_i(M)= \prod_{e \in M} \lambda_i(e)$ for $M \in \Om$ and $\lambda_i(\mcS)=\sum_{M \in \mcS} \lambda_i(M)$ for $\mcS \subset \Om$. 
+	
+\end{flushleft}
+\item \begin{flushleft}
+	At each iteration for some vertex $v$ we change the $\lambda$ of all non edges connected to that vertex by a factor of $e^{-1/2}$. That is for all non edges connected to $v$ we have $\lambda(e) \rightarrow e^{-1/2}\lambda(e)$.
+\end{flushleft}
+\item \begin{flushleft}
+	Since we have $n$ vertices and for non-edges we go from $1\rightarrow 1/n!$ and $\log{n!} \leq n\log{n}$ so we have total of $r=n^2 \log{n}$ iterations. 
+\end{flushleft}
+\item \begin{flushleft}
+	Now we will define the random walk which describes the Markov Chain at each iteration.\\
+	So we want the stationary probability $\pi_i$ distribution of the markov chain at iteration $i$ to be propotional to the following quantity $\Lambda_i$.(Basically $\pi_i(M) \propto \Lambda_i(M)$) Where $\Lambda_i$ is defined as follows. \\
+	$$\Lambda_i(M)= \begin{cases}\lambda_i(M) w_i(u, v) & \text { if } M \in \mathcal{M}(u, v) \text { for some } u, v ; \\ \lambda_i(M), & \text { if } M \in \mathcal{M} .\end{cases}$$
+\end{flushleft}
+\item \begin{flushleft}
+	The transition from a matching $M$, for a random walk at iteration $i$ ($MC_i$) is described as follows for the random walk-\\
+	\begin{itemize}
+		\item If $M \in \mathcal{M}$, choose an edge $e=(u, v)$ uniformly at random from $M$; set $M^{\prime}=M \backslash e$.
+		\item If $M \in \mathcal{M}(u, v)$, choose $z$ uniformly at random from $V_1 \cup V_2$.
+		\begin{itemize}
+			
+		
+		\item if $z \in\{u, v\}$ and $(u, v) \in E$, let $M^{\prime}=M \cup(u, v)$;
+		\item if $z \in V_2,(u, z) \in E$ and $(x, z) \in M$, let $M^{\prime}=M \cup(u, z) \backslash(x, z)$;
+		\item if $z \in V_1,(z, v) \in E$ and $(z, y) \in M$, let $M^{\prime}=M \cup(z, v) \backslash(z, y)$;
+		\item otherwise, let $M^{\prime}=M$.
+	\end{itemize}
+		\item With probability $\min \left\{1, \Lambda_i\left(M^{\prime}\right) / \Lambda_i(M)\right\}$ go to $M^{\prime}$; otherwise, stay at $M$.
+		\item Now with probability $1/2$ we stay at $M$ and with $1/2$ probability we move using above transition.
+	
+	\end{itemize}
+\end{flushleft}
+\item \begin{flushleft}
+	Now for the above markov chain we can see that the stationary probability distribution is propotional to $\Lambda_i$. Now we will explain how we update $w$'s.\\
+	We want $w_i(u,v)$ to be close to $w_i^*(u,v)$, where $w^*_i(u,v) = \frac{\Lambda_i(\mcM)}{\Lambda_i(\mcM(u,v))}$. The intuition behind choosing $w^*$ is that if $w=w^*$ then each pattern (pattern is defined as the sets $\mcM\cup \{\mcM(u,v)| (u,v)\in V_1 \times V_2\}$, there are ($n^2+1$) patterns) would be equally likely in the stationary probability distribution.
+\end{flushleft}
+\item We want that $w^*(u,v)/2 \leq w(u,v) \leq 2w^*(u,v)$ because of the following theorem.
+
+
+	\begin{theorem}
+		 Assuming the weight function $w_i$ satisfies inequality $w_i^*(u,v)/2 \leq w_i(u,v) \leq 2w_i^*(u,v)$  for all $(u, v) \in V_1 \times V_2$ with $\mathcal{M}(u, v) \neq \emptyset$, then the mixing time of the Markov chain $M C_i$ is bounded above by $\tau_M(\delta)=O\left(n^6 g\left(\log \left(\pi(M)^{-1}\right)+\log \delta^{-1}\right)\right)$.
+	\end{theorem}
+\item \begin{flushleft}
+	This theorem is the heart of the algorithm it is proved by using a multi commodity flow and bounding the congestion($\varrho$). I will use the bound on the congestion and the following theorem to give bounds for the running time of the sampler and hence the approximation algorithm.
+	\begin{theorem}
+		For an ergodic, reversible Markov chain with self-loop probabilities $P(M, M) \geq 1 / 2$ for all states $M$, and any initial state $M_0 \in \Omega$,
+		$$
+		\tau_{M_0}(\delta) \leq \varrho\left(\ln \pi\left(M_0\right)^{-1}+\ln \delta^{-1}\right) .
+		$$
+	\end{theorem}
+\end{flushleft}
+\item \begin{flushleft}
+	We will analyze the complexities at last for now we will just describe how we update $w's$.
+	We will show the following relation holds 
+	$$\frac{\Lambda_i(\mcM(u,v))}{\Lambda_i(\mcM)}=\frac{\pi_i(\mcM(u,v))}{\pi_i(\mcM)}=\frac{w_i(u,v)}{w_i^*(u,v)}$$
+	\begin{align*}
+		\Lambda_i(\mcM(u,v))& =\sum_{M\in \mcM(u,v)}\lambda_i(M) w_i(u,v) \\
+		& = w_i(u,v)\sum_{M\in \mcM(u,v)}\lambda_i(M)\\
+		& = w_i(u,v)\lambda_i(\mcM(u,v))\\
+		& = w_i(u,v)\frac{\lambda_i(\mcM)}{w_i^*(u,v)}\\
+		\implies \frac{\Lambda_i(\mcM(u,v))}{\Lambda_i(\mcM)}& = \frac{\pi_i(\mcM(u,v))}{\pi_i(\mcM)}=\frac{w_i(u,v)}{w_i^*(u,v)} 
+	\end{align*}
+Now we want to use an unbiased estimator for estimating $\pi_i(\mcM)$ and $\pi_i(\mcM(u,v))$ 
+in order to get a $5/6$ factor approximation to $w^*(u,v)$.We will use this approximation to get $w_{i+1}$.We will use the condition on $w$ and Theorem $2.1$ to put bound on mixing time to get get $\delta$ close sampler for $\pi_i$.
+\end{flushleft}
+\begin{flushleft}
+	Although we do not know how to sample from $\pi_i$ exactly, Theorem 2.1 does allow us to sample, in polynomial time, from a distribution $\hat{\pi_i}$ that is within variation distance $\delta$ of $\pi_i$. We shall see presently that setting $\delta=O\left(n^{-2}\right)$ suffices in the current situation; certainly, the exact value of $\delta$ clearly does not affect the leading term in the mixing time promised by Theorem 2.1. So suppose we generate $S$ samples from $\hat{\pi_i}$, and for each pair $(u, v) \in V_1 \times V_2$ we consider the proportion $\alpha(u, v)$ of samples with hole pair $u, v$, together with the proportion $\alpha$ of samples that are perfect matchings.
+	(For the rest of the paragraph I will drop the $i$ subscript as it is same for all $i$) Clearly,
+	$$
+	\mathbb{E} \alpha(u, v)=\hat{\pi}(\mathcal{M}(u, v)) \quad \text { and } \quad \mathbb{E} \alpha=\hat{\pi}(\mathcal{M}) .
+	$$
+	I will also prove one fact that assuming conditions on $w$  $$\pi(\mcM(u,v))\geq \frac{1}{4(n^2+1)}$$
+	\begin{align*}
+		\text{Since } \Om=\mcM \cup \mcN \text{ we have-}\\
+		\implies & \pi(\mcM) + \sum_{(u,v)}\pi(\mcM(u,v))=1\\
+		\implies & \pi(\mcM)+\sum_{(u,v)} \frac{\lambda(\mcM(u,v))w(u,v)}{\Lambda(\Om)} =1\\
+		\implies & \pi(\mcM)+\sum_{(u,v)} \frac{\lambda(\mcM)w(u,v)}{\Lambda(\Om)w^*(u,v)}=1\\
+		\implies & \pi(\mcM)+\sum_{(u,v)} \frac{2\lambda(\mcM)}{\Lambda(\Om)} \geq1\\
+		\implies & \pi(\mcM)(1+2n^2) \geq 1\\
+		\implies & \pi(\mcM) \geq \frac{1}{(2n^2+1)}\\
+		\implies & \pi(\mcM(u,v))\geq \frac{1}{4(n^2+1)}
+	\end{align*}
+	Naturally, it is always possible that some sample average $\alpha(u, v)$ will be far from its expectation, so we have to allow for the possibility of failure. We denote by $\hat{\eta}$ the (small) failure probability we are prepared to tolerate. Provided the sample size $S$ is large enough, $\alpha(u, v)$ (respectively, $\alpha$ ) approximates $\hat{\pi}(\mathcal{M}(u, v))$ (respectively, $\hat{\pi}(\mathcal{M}))$ within ratio $c^{1 / 4}$, with probability at least $1-\hat{\eta}$. Furthermore, if $\delta$ is small enough, $\hat{\pi}(\mathcal{M}(u, v))$ (respectively, $\hat{\pi}(\mathcal{M})$ ) approximates $\pi(\mathcal{M}(u, v))$ (respectively, $\pi(\mathcal{M})$ ) within ratio $c^{1 / 4}$. Then,  we have, with probability at least $1-\left(n^2+1\right) \hat{\eta}$, approximations within ratio $c$ to all of the target weights $w^*(u, v)$.
+	
+	It remains to determine bounds on the sample size $S$ and sampling tolerance $\delta$ that make this all work. Condition on $w$ entails
+	$$
+	\mathbb{E} \alpha(u, v)=\hat{\pi}(\mathcal{M}(u, v)) \geq \pi(\mathcal{M}(u, v))-\delta \geq \frac{1}{4\left(n^2+1\right)}-\delta .
+	$$
+	
+	Assuming $\delta \leq 1 / 8\left(n^2+1\right)$, it follows from any of the standard Chernoff bounds , that $O\left(n^2 \log (1 / \hat{\eta})\right)$ samples from $\hat{\pi}$ suffice to estimate $\mathbb{E} \alpha(u, v)=\hat{\pi}(\mathcal{M}(u, v))$ within ratio $c^{1 / 4}$ with probability at least $1-\hat{\eta}$. Again using the fact that $\pi(\mathcal{M}(u, v)) \geq 1 / 4\left(n^2+1\right)$, we see that $\hat{\pi}(\mathcal{M}(u, v))$ will approximate $\pi(\mathcal{M}(u, v))$ within ratio $c^{1 / 4}$ provided $\delta \leq c_1 / n^2$ where $c_1>0$ is a sufficiently small constant. (Note that we also satisfy the earlier constraint on $\delta$ by this setting.) Hence we take $c=5/6$ and $S=O\left(n^2 \log (1 / \hat{\eta})\right)$ to get a refined estimate to $w^*$. For $i$ th iteration we label this approximation to $w^*_i$ as $w'_i$.
+\end{flushleft}
+\item \begin{flushleft}
+	We return $w_{i+1} $ as $w'_i$. Because $w'_i$ is within $5/6$ factor of $w^*_i$ and $w_{i+1}^* $ is within a factor of $e^{-1/2}$ of $w^*_i$. Since $5/6\cdot e^{-1/2}=0.505\geq 0.5$ $w_{i+1}$ satisfies the condition that is within a factor of 2 of $w^*_{i+1}$. Hence we can repeat this step for $r=O(n^2 \log n)$ iterations to get our desired markov chain and $MC_r$ will be our desired markov chain.
+\end{flushleft}
+
+\end{itemize}
+
+\subsection{Approximating the number of perfect matchings}
+\begin{flushleft}
+	Now to get the number of perfect matchings we will use the following annealing scheme-
+	$$\Lambda_0(\Om)\cdot\frac{\Lambda_1(\Om)}{\Lambda_0(\Om)}\cdot\frac{\Lambda_1(\Om)}{\Lambda_2(\Om)}\cdots \frac{\Lambda_{r}(\Om)}{\Lambda_{r-1}(\Om)}\cdot
+	\frac{\Lambda_r(\mcM_G)}{\Lambda_r(\Om)}$$
+	We know that $\Lambda_0(\Om) = (n^2+1)n!$. We will now use $MC_i$ to estimate $\frac{\Lambda_{i+1}(\Om)}{\Lambda_i(\Om)}$.\\
+	and $MC_r$ to estimate $\frac{\Lambda_r(\mcM_G)}{\Lambda_r(\Om)}$.
+\end{flushleft}

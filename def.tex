@@ -1,0 +1,27 @@
+For our case we assume the graph $\mcG$ to be bipartite in all definitions and theorems.
+\begin{itemize}
+	
+	\item \begin{flushleft}
+		\textbf{Perfect Matching-} For a graph $\mcG$ , a perfect matching $M$ is a  subset of edges of the graph $\mcG$  in which each vertex has exactly one edge incident onto it. 
+	\end{flushleft}
+	
+	\item \begin{flushleft}
+		\textbf{Near Perfect Matching-} For a graph $\mcG$ a near perfect matching $M$ is a set of edges in which all vertices except exactly two vertices say $u,v$ have exactly one edge incident onto it in $M$ . For our case of bipartite graphs it is easy to see that the vertices $u$ and $v$ are in different bipartitions.\\
+		
+		Also for a near perfect  matching $M$ in which $u,v$ are not matched we say $u$ and $v$ the markov are the holes of the near perfect  matching $M$.
+	\end{flushleft}
+	
+	\item \begin{flushleft}
+		\textbf{Permanent-} The permanent of a $n \times n$ matrix $A$ is defined as follows $$per(A)= \sum_{\sigma \in S_n}\prod_{i}a_{i,\sigma(i)}$$
+	\end{flushleft}
+	\item \begin{flushleft}
+		\textbf{Mixing time of a Markov Chain -}
+		The mixing time $\tau_x(\delta)$ of a markov chain $\mcM$  is defined as follows
+		$$\tau_x(\delta)=\min\{t | \forall s\geq t,
+		d(P^s(x),\pi_{\mcM})<\delta \}$$. Where $P^s(x)$ is the distribution on the states obtained after walking on the markov chain for s steps starting from $x$ and $\pi_{\mcM}$ is the stationary distribution of $\mcM$.\\
+		Let the spectral gap of the markov chain that is difference between the norm of the largest(norm) two eigenvalues (the largest being 1) of the transition probability matrix of the markov chain be denoted by $\gamma$.\\
+		Then we have the following bounds on the mixing time 
+		$$\tau_x(\delta)\leq \frac{1}{\gamma}(\log{\frac{1}{\pi_{\mcM}(x)}}+ \log{\frac{1}{\delta}})$$
+	\end{flushleft}
+	
+\end{itemize}

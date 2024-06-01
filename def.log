@@ -1,0 +1,248 @@
+This is LuaHBTeX, Version 1.14.0 (TeX Live 2022/dev/Debian)  (format=lualatex 2023.2.1)  30 MAY 2024 17:51
+ restricted system commands enabled.
+**def.tex
+(./def.tex
+LaTeX2e <2021-11-15> patch level 1
+Lua module: luaotfload 2021-05-21 3.18 Lua based OpenType font support
+Lua module: lualibs 2021-05-20 2.74 ConTeXt Lua standard libraries.
+Lua module: lualibs-extended 2021-05-20 2.74 ConTeXt Lua libraries -- extended c
+ollection.
+luaotfload | conf : Root cache directory is "/home/rishavg/.texlive2021/texmf-va
+r/luatex-cache/generic/names".
+luaotfload | init : Loading fontloader "fontloader-2021-05-20.lua" from kpse-res
+olved path "/usr/share/texlive/texmf-dist/tex/luatex/luaotfload/fontloader-2021-
+05-20.lua".
+Lua-only attribute luaotfload@noligature = 1
+Lua-only attribute luaotfload@syllabe = 2
+luaotfload | init : Context OpenType loader version 3.116
+Inserting `luaotfload.node_processor' at position 1 in `pre_linebreak_filter'.
+Inserting `luaotfload.node_processor' at position 1 in `hpack_filter'.
+Inserting `luaotfload.glyph_stream' at position 1 in `glyph_stream_provider'.
+Inserting `luaotfload.define_font' at position 1 in `define_font'.
+Lua-only attribute luaotfload_color_attribute = 3
+luaotfload | conf : Root cache directory is "/home/rishavg/.texlive2021/texmf-va
+r/luatex-cache/generic/names".
+Inserting `luaotfload.harf.strip_prefix' at position 1 in `find_opentype_file'.
+Inserting `luaotfload.harf.strip_prefix' at position 1 in `find_truetype_file'.
+Inserting `luaotfload.harf.finalize_vlist' at position 1 in `post_linebreak_filt
+er'.
+Inserting `luaotfload.harf.finalize_hlist' at position 2 in `hpack_filter'.
+Inserting `luaotfload.cleanup_files' at position 1 in `wrapup_run'.
+Inserting `luaotfload.harf.finalize_unicode' at position 1 in `finish_pdffile'.
+Inserting `luaotfload.glyphinfo' at position 1 in `glyph_info'.
+Lua-only attribute luaotfload.letterspace_done = 4
+Inserting `luaotfload.aux.set_sscale_dimens' at position 1 in `luaotfload.patch_
+font'.
+Inserting `luaotfload.aux.set_font_index' at position 2 in `luaotfload.patch_fon
+t'.
+Inserting `luaotfload.aux.patch_cambria_domh' at position 3 in `luaotfload.patch
+_font'.
+Inserting `luaotfload.aux.fixup_fontdata' at position 1 in `luaotfload.patch_fon
+t_unsafe'.
+Inserting `luaotfload.aux.set_capheight' at position 4 in `luaotfload.patch_font
+'.
+Inserting `luaotfload.aux.set_xheight' at position 5 in `luaotfload.patch_font'.
+Inserting `luaotfload.rewrite_fontname' at position 6 in `luaotfload.patch_font'
+. L3 programming layer <2022-01-21>
+Inserting `tracingstacklevels' at position 1 in `input_level_string'.
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1 F
+   or our case we assume the graph $\mcG$ to be bipartite in all definitions...
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 1.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 1.
+! Undefined control sequence.
+<recently read> \mcG 
+     
+l.1 For our case we assume the graph $\mcG
+                                        $ to be bipartite in all definitions...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (20.0pt too wide) in paragraph at lines 1--2
+[]For
+ []
+
+luaotfload | db : Font names database loaded from /home/rishavg/.texlive2021/tex
+mf-var/luatex-cache/generic/names/luaotfload-names.luc
+! Undefined control sequence.
+<recently read> \mcG 
+     
+l.5 		\textbf{Perfect Matching-} For a graph $\mcG
+                                                $ , a perfect matching $M$ i...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+<recently read> \mcG 
+     
+l.5 ... $M$ is a  subset of edges of the graph $\mcG
+                                                  $  in which each vertex ha...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (21.38pt too wide) in paragraph at lines 5--6
+\TU/lmr/bx/n/10 Per- 
+ []
+
+
+Overfull \hbox (18.36pt too wide) in paragraph at lines 5--6
+\TU/lmr/bx/n/10 fect 
+ []
+
+
+Overfull \hbox (51.31999pt too wide) in paragraph at lines 5--6
+\TU/lmr/bx/n/10 Matching- 
+ []
+
+
+Overfull \hbox (10.79166pt too wide) in paragraph at lines 5--6
+\OML/cmm/m/it/10 M$ 
+ []
+
+! Undefined control sequence.
+<recently read> \mcG 
+     
+l.9 ...tbf{Near Perfect Matching-} For a graph $\mcG
+                                                  $ a near perfect matching ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (24.6pt too wide) in paragraph at lines 9--9
+\TU/lmr/bx/n/10 Near 
+ []
+
+
+Overfull \hbox (21.38pt too wide) in paragraph at lines 9--9
+\TU/lmr/bx/n/10 Per- 
+ []
+
+
+Overfull \hbox (18.36pt too wide) in paragraph at lines 9--9
+\TU/lmr/bx/n/10 fect 
+ []
+
+
+Overfull \hbox (51.31999pt too wide) in paragraph at lines 9--9
+\TU/lmr/bx/n/10 Matching- 
+ []
+
+
+Overfull \hbox (10.79166pt too wide) in paragraph at lines 9--9
+\OML/cmm/m/it/10 M$ 
+ []
+
+
+Overfull \hbox (15.375pt too wide) in paragraph at lines 9--9
+\OML/cmm/m/it/10 u; v$ 
+ []
+
+
+Overfull \hbox (10.79166pt too wide) in paragraph at lines 9--9
+\OML/cmm/m/it/10 M$ 
+ []
+
+
+Overfull \hbox (5.72458pt too wide) in paragraph at lines 9--9
+\OML/cmm/m/it/10 u$ 
+ []
+
+
+Overfull \hbox (5.20601pt too wide) in paragraph at lines 9--9
+\OML/cmm/m/it/10 v$ 
+ []
+
+
+Overfull \hbox (10.79166pt too wide) in paragraph at lines 11--12
+\OML/cmm/m/it/10 M$ 
+ []
+
+
+Overfull \hbox (15.375pt too wide) in paragraph at lines 11--12
+\OML/cmm/m/it/10 u; v$ 
+ []
+
+
+Overfull \hbox (5.72458pt too wide) in paragraph at lines 11--12
+\OML/cmm/m/it/10 u$ 
+ []
+
+
+Overfull \hbox (5.20601pt too wide) in paragraph at lines 11--12
+\OML/cmm/m/it/10 v$ 
+ []
+
+
+Overfull \hbox (10.79166pt too wide) in paragraph at lines 11--12
+\OML/cmm/m/it/10 M$\nullfont .  
+ []
+
+
+Overfull \hbox (58.75pt too wide) in paragraph at lines 15--15
+\TU/lmr/bx/n/10 Permanent- 
+ []
+
+
+Overfull \hbox (13.78015pt too wide) in paragraph at lines 15--15
+\OML/cmm/m/it/10 n \OMS/cmsy/m/n/10  
+ []
+
+
+Overfull \hbox (6.00235pt too wide) in paragraph at lines 15--15
+\OML/cmm/m/it/10 n$ 
+ []
+
+
+Overfull \hbox (7.50002pt too wide) in paragraph at lines 15--15
+\OML/cmm/m/it/10 A$ 
+ []
+
+
+Overfull \hbox (104.242pt too wide) detected at line 15
+\OML/cmm/m/it/10 per\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 A\OT1/cmr/m/n/10 ) = [] [
+] \OML/cmm/m/it/10 a[]
+ []
+
+)
+! Emergency stop.
+<*> def.tex
+        
+*** (job aborted, no legal \end found)
+
+
+
+Here is how much of LuaTeX's memory you used:
+ 26 strings out of 477805
+ 100000,383344 words of node,token memory allocated 8224 words of node memory still in use:
+   80 hlist, 2 vlist, 2 disc, 10 local_par, 1 dir, 21 math, 310 glue, 28 kern, 4
+5 penalty, 594 glyph, 97 attribute, 39 glue_spec, 97 attribute_list nodes
+   avail lists: 2:7,3:12,4:20,5:22,7:1,8:20,9:1,10:19
+ 20842 multiletter control sequences out of 65536+600000
+ 25 fonts using 1345055 bytes
+ 18i,1n,12p,358b,173s stack positions out of 5000i,500n,10000p,200000b,80000s
+!  ==> Fatal error occurred, no output PDF file produced!
