@@ -8,11 +8,11 @@
 \begin{flushleft}
 	So given a bipartite graph $\mcG$ on $2n$ vertices we need to get an almost uniform sampler on the perfect matchings of the graph $\mcG$.\\
 	So for making such a sampler we will make a markov chain on the space $\Om = \mcM \cup \mcN $ that is union of perfect matchings and near perfect matchings. (We denote $\mcM$ to be set of all perfect matchings possible on $K_{n,n}$ and $\mcN$ to be the set of all near perfect matchings possible on $K_{n,n}$ ) where the probability to land on a valid matching $M$ that is $M\in \mcM_{\mcG}$,($\mcM_{\mcG}$ is the set of all valid perfect matchings on $\mcG$) in the stationary probability distribution of the markov chain is quite high like $\Omega(\frac{1}{n^2})$ and is uniform on the set $\mcM_{\mcG}$.In other words, we will get a markov chain $MC$ with state space being $\Om$ as defined above such that
-	$$\pi_{MC}(\mcM_{\mcG} )\geq \frac{1}{(4n^2+1)} = \Omega(1/n^2)$$
+	$$\pi_{MC}(\mcM_{\mcG} )\geq \frac{1}{(4n^2+2)} = \Omega(1/n^2)$$
 	   After getting such a markov chain we use the following algorithm to get an almost uniform sampler for the perfect matchings of $\mcG$.
 \end{flushleft}
 \begin{flushleft}
-	Set $\hat{\delta} \leftarrow \delta /\left(12 n^2+3\right)$.\\
+	Set $\hat{\delta} \leftarrow \delta /\left(12 n^2+6\right)$.\\
 	Repeat $T=\left\lceil\left(6 n^2+2\right) \ln (3 / \delta)\right\rceil$ times:\\
 	\parinn Simulate the Markov chain for $\tau(\hat{\delta})$ steps;\\ output the final state if it belongs to $\mathcal{M_{\mcG}}$ and halt.\\ \parinf Output an arbitrary perfect matching if all trials fail.
 \end{flushleft}
@@ -27,7 +27,7 @@
 \end{flushleft}
 Hence we get an almost uniform sampler on the perfect matchings of $\mcG$ using the promised Markov Chain.
 \subsection{Designing the desired Markov Chain}
-Now we wish to design the markov chain on the set $\Om=\mcM \cup \mcN$ whose stationary probability distribution $\pi$ has the property that when restricted to elements of $\mcM_G$ it is uniform and $\pi(\mcM_G) $ (which is $\sum_{M\in \mcM_G} \pi(M)$)$\geq \frac{1}{(4n^2+1)}$.\\
+Now we wish to design the markov chain on the set $\Om=\mcM \cup \mcN$ whose stationary probability distribution $\pi$ has the property that when restricted to elements of $\mcM_G$ it is uniform and $\pi(\mcM_G) $ (which is $\sum_{M\in \mcM_G} \pi(M)$)$\geq \frac{1}{(4n^2+2)}$.\\
 \begin{flushleft}
 	For designing this Markov chain we will define a sequence of parameters each parameter will describe a markov chain which will be used to determine the parameters for the next iteration.\\
 	So we have parameters $\lambda(u,v)$ and $w(u,v)$ for each pair $(u,v) $ where $u\in V_1(G)$ and $v \in V_2(G)$. 
@@ -141,4 +141,106 @@ in order to get a $5/6$ factor approximation to $w^*(u,v)$.We will use this appr
 	\frac{\Lambda_r(\mcM_G)}{\Lambda_r(\Om)}$$
 	We know that $\Lambda_0(\Om) = (n^2+1)n!$. We will now use $MC_i$ to estimate $\frac{\Lambda_{i+1}(\Om)}{\Lambda_i(\Om)}$.\\
 	and $MC_r$ to estimate $\frac{\Lambda_r(\mcM_G)}{\Lambda_r(\Om)}$.
+	\\Now we will explain how we estimate $\frac{\Lambda_{i+1}(\Om)}{\Lambda_i(\Om)}$. \\
+	First we will prove one bound that $$\frac{1}{4e}\leq\frac{\Lambda_{i+1}(M)}{\Lambda_i(M)}\leq 4e, \forall M \in \Om$$ 
+	\\For $M\in \mcM$ it is easy to the bound holds since $\frac{\Lambda_{i+1}(\Om)}{\Lambda_i(\Om)}$ either remains same or gets reduced by a factor of $e^{-1/2}$.\\
+	For $M\in \mcN$ note that since, $5/12 \leq w_i/w_{i+1} \leq 12/5$ we get that $$\frac{5}{12e^{1/2}}\leq\frac{\Lambda_{i+1}(M)}{\Lambda_i(M)}\leq \frac{12e^{1/2}}{5}, \forall M \in \mcN$$\\Hence now it is obvious that the above claim holds.
+	
 \end{flushleft}
+\begin{flushleft}
+	Let $\pi_i$ denote the stationary distribution of the Markov chain used in phase $i$, so that $\pi_i(M)=\Lambda_i(M) / \Lambda_i(\Omega)$. Let $Z_i$ denote the random variable that is the outcome of the following experiment:
+	By running the desired Markov chain $M C$  with parameters $\Lambda=\Lambda_i$ and $\delta=\varepsilon / 80 e^2 r$, obtain a sample matching $M$ from a distribution that is within variation distance $\varepsilon / 80 e^2 r$ of $\pi_i$.
+	Return $\Lambda_{i+1}(M) / \Lambda_i(M)$.
+	
+	If we had sampled $M$ from the exact stationary distribution $\pi_i$ instead of an approximation, then the resulting modified random variable $Z_i^{\prime}$ would have satisfied
+	$$
+	\mathbb{E} Z_i^{\prime}=\sum_{M \in \Omega} \frac{\Lambda_i(M)}{\Lambda_i(\Omega)} \frac{\Lambda_{i+1}(M)}{\Lambda_i(M)}=\frac{\Lambda_{i+1}(\Omega)}{\Lambda_i(\Omega)} .
+	$$
+	
+	As it is, noting the particular choice for $\delta$ and bounds on the ratios, and using the fact that $\exp (-x / 4) \leq 1-\frac{1}{5} x \leq 1+\frac{1}{5} x \leq \exp (x / 4)$ for $0 \leq x \leq 1$, we must settle for
+	$$
+	\exp \left(-\frac{\varepsilon}{4 r}\right) \frac{\Lambda_{i+i}(\Omega)}{\Lambda_i(\Omega)} \leq \mathbb{E} Z_i \leq \exp \left(\frac{\varepsilon}{4 r}\right) \frac{\Lambda_{i+i}(\Omega)}{\Lambda_i(\Omega)} .
+	$$
+	
+	Now suppose $s$ independent trials are conducted for each $i$ using the above experiment, and denote by $\bar{Z}_i$ the sample mean of the results. Then $\mathbb{E} \bar{Z}_i=\mathbb{E} Z_i$ and then we have.
+	$$
+	\exp \left(-\frac{\varepsilon}{4}\right) \frac{\Lambda_r(\Omega)}{\Lambda_0(\Omega)} \leq \mathbb{E}\left(\bar{Z}_0 \bar{Z}_1 \ldots \bar{Z}_{r-1}\right) \leq \exp \left(\frac{\varepsilon}{4}\right) \frac{\Lambda_r(\Omega)}{\Lambda_0(\Omega)}
+	$$
+	
+	For $s$ sufficiently large, $\prod_i \bar{Z}_i$ will be close to $\prod_i \mathbb{E} \bar{Z}_i$ with high probability. With a view to quantifying "sufficiently large," observe that in the light of bounds of the ratio,
+	$$
+	\frac{\operatorname{Var}\left[\bar{Z}_i\right]}{\left(\mathbb{E} \bar{Z}_i\right)^2} \leq \frac{64e^3}{s}
+	$$
+	
+	Thus, taking $s=\Theta\left(r \varepsilon^{-2}\right)$ we get
+	$$
+	\begin{aligned}
+		\frac{\operatorname{Var}\left[\bar{Z}_0 \cdots \bar{Z}_{r-1}\right]}{\left(\mathbb{E}\left[\bar{Z}_0 \cdots \bar{Z}_{r-1}\right]\right)^2} & =\prod_{i=0}^{r-1} \frac{\mathbb{E} \bar{Z}_i^2}{\left(\mathbb{E} \bar{Z}_i\right)^2}-1 \\
+		& =\prod_{i=0}^{r-1}\left(1+\frac{\operatorname{Var} \bar{Z}_i}{\left(\mathbb{E} \bar{Z}_i\right)^2}\right)-1 \\
+		& \leq\left(1+\frac{64e^3}{s}\right)^r-1 \\
+		& =O\left(\varepsilon^2\right) .
+	\end{aligned}
+	$$
+	
+	So, by Chebyshev's inequality,
+	$$
+	\operatorname{Pr}\left[\exp (-\varepsilon / 4) \mathbb{E}\left(\bar{Z}_0 \cdots \bar{Z}_{r-1}\right) \leq \bar{Z}_0 \cdots \bar{Z}_{r-1} \leq \exp (\varepsilon / 4) \mathbb{E}\left(\bar{Z}_0 \cdots \bar{Z}_{r-1}\right)\right] \geq \frac{11}{12} \text {, }
+	$$
+	assuming the constant implicit in the setting $s=\Theta\left(r \varepsilon^{-2}\right)$ is chosen appropriately. Combining above with the fact that $\Lambda_0(\Omega)=\left(n^2+1\right) n!$, we obtain
+	$$
+	\operatorname{Pr}\left[\exp (-\varepsilon / 2) \Lambda_r(\Omega) \leq\left(n^2+1\right) n!\bar{Z}_0 \cdots \bar{Z}_{r-1} \leq \exp (\varepsilon / 2) \Lambda_r(\Omega)\right] \geq \frac{11}{12}
+	$$
+	\\
+	Now we wish to estimate the ratio $\frac{\Lambda_{r}(\mcM_G)}{\Lambda_r(\Omega)}$ which is basically the probability of hitting a valid matching in the stationary distribution of $MC_r$ . And we know that $\frac{\Lambda_{r}(\mcM_G)}{\Lambda_r(\Omega)}\geq \frac{1}{(4n^2+2)}$ . So now we will use a unbiased estimator to estimate this probability. \\
+	
+\end{flushleft}
+\break
+\begin{flushleft}
+	For this we will carry out the following experiment -
+	\end{flushleft}
+\begin{itemize}
+	\item By running the Markov chain $M C_r$ and $\delta=\varepsilon / 80 e^2$, obtain a sample matching $M$ from a distribution that is within variation distance $\varepsilon / 80 e^2$ of $\pi_r$.
+	
+	\item Return 1 if $M \in \mathcal{M}_G$, and 0 otherwise.\\
+\end{itemize}
+\begin{flushleft}
+	The outcome of this experiment is a random variable that we denote by $Y$. If $M$ had been sampled from the exact stationary distribution $\pi_r$ then its expectation would have been $\Lambda_r\left(\mathcal{M}_G\right) / \Lambda(\Omega)$; as it is, we have
+	$$
+	\exp \left(-\frac{\varepsilon}{4}\right) \frac{\Lambda_r\left(\mathcal{M}_G\right)}{\Lambda_r(\Omega)} \leq \mathbb{E} Y \leq \exp \left(\frac{\varepsilon}{4}\right) \frac{\Lambda_r\left(\mathcal{M}_G\right)}{\Lambda_r(\Omega)} .
+	$$
+	Let $\bar{Y}$ denote the sample mean of $s^{\prime}=\Theta\left(n^2 \varepsilon^{-2}\right)$ independent trials of the above experiment. Since $\mathbb{E} \bar{Y}=\mathbb{E} Y=\Omega\left(n^{-2}\right)$, Chebyshev's inequality gives
+	$$
+	\operatorname{Pr}[\exp (-\varepsilon / 4) \mathbb{E} \bar{Y} \leq \bar{Y} \leq \exp (\varepsilon / 4) \mathbb{E} \bar{Y}] \geq \frac{11}{12},
+	$$
+	as before. Combining this with the probability for the previous ratios , we get
+	$$
+	\operatorname{Pr}\left[\exp (-\varepsilon)\left|\mathcal{M}_G\right| \leq\left(n^2+1\right) n!\bar{Y} \bar{Z}_0 \bar{Z}_1 \cdots \bar{Z}_{r-1}\leq \exp (\varepsilon)|\mathcal{M}_G|\right] \geq \frac{5}{6} .
+	$$
+	
+	All this was under the assumption that the initialization procedure succeeded. But provided we arrange for the failure probability of initialization to be at most $1 / 12$, it will be seen that $\left(n^2+1\right) n!\bar{Y} \bar{Z}_0 \bar{Z}_1 \cdots \bar{Z}_{r-1}$ is an estimator for the permanent that meets the specification of an FPRAS.
+	
+	
+\end{flushleft}
+\subsection{Complexity Analysis }
+\begin{flushleft}
+	In total, the above procedure requires $r s+s^{\prime}=O\left(\varepsilon^{-2} n^4(\log n)^2\right)$ samples; by Theorem 2.1, $O\left(n^7 \log n\right)$ time is sufficient to generate each sample. (Since there is no point in setting $\varepsilon=o(1 / n!)$, the $\log \delta^{-1}$ term in Theorem 2.1 can never dominate.) The running time is thus $O\left(\varepsilon^{-2} n^{11}(\log n)^3\right)$. Note that this is sufficient to absorb the cost of the initialization procedure as well, which we will show is $O\left(n^{11}(\log n)^3\right)$.\\
+	Now for the intialization step that is setting up $w_i(u,v)$ for all $i,u,v$.
+	Since markov chain took $O(n^7 \log n )$ steps and for each $i$ we generated $O(n^2\log(1/\hat{\eta}))$ and there are total $r=n^2 \log{n}$ iterations of i so we have total $O(n^{11} (\log{n})^2 \cdot \log(1/\hat{\eta}))$ steps in the intialization process. Now we need to just set $\hat{\eta}$ hence $\eta$.\\
+	Recall that $\hat{\eta}$ is the failure probability on each occasion that we use a sample mean to estimate an expectation. If we are to achieve overall failure probability $\eta$ then we must set $\hat{\eta}=O\left(\eta /\left(n^4 \log n\right)\right)$, since there are $O\left(n^4 \log n\right)$ individual estimates to make in total. And we set $\eta$ to $\delta/2$ or some lesser factor of $\delta$. Now we get total steps equals
+	$O(n^{11} (\log{n})^2 \cdot (\log(1/\eta)+ \log(n)))$ since $\log(n)$ dominates over $\log(1/\delta)=\log(\eta)$ hence we get that the initialization process takes total $O\left(n^{11}(\log n)^3\right)$ time hence we are done.
+\end{flushleft}
+\subsection{General Weights}
+\begin{flushleft}
+	The algorithm is exactly the same just updating of the $w_i$'s and $\lambda_i$'s and their initial values is a little bit tweaked . The following is the changed pseudocode for the updates.
+\end{flushleft}
+\begin{flushleft}
+	Initialize $\lambda(u, v) \leftarrow a_{\text {max }}$ for all $(u, v) \in V_1 \times V_2$.
+	Initialize $w(u, v) \leftarrow n a_{\max }$ for all $(u, v) \in V_1 \times V_2$.\\
+	While there exists a pair $y, z$ with $\lambda(y, z)>a(y, z)$ do:\\
+	\parinn Take a sample of size $S$ from $M C$ with parameters $\lambda, w$, using a \\simulation of $T$ steps in each case.\\
+	Use the sample to obtain estimates $w^{\prime}(u, v)$ satisfying condition (8), for \\all $u, v$, with high probability.\\
+	Set $\lambda(y, v) \leftarrow \max \{\lambda(y, v) \exp (-1 / 2), a(y, v)\}$, for all $v \in V_2$, and \\$w(u, v) \leftarrow w^{\prime}(u, v)$ for all $u, v$.\\
+	\parinf
+	Output the final weights $w(u, v)$.
+\end{flushleft}
+Where $a_{max}$ and $a_{min}$ are the maximum and minimum non-zero entries of the matrix $M$ whose permanent we need to compute. We actually tweak  the error ratios a bit for this and get an approximation algorithm polynomial in $n$ , $\log{(a_{max}/a_{min})}$ and obviously $1/\varepsilon$.
