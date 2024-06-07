@@ -71,7 +71,7 @@ Also we define $\lambda_i(M)= \prod_{e \in M} \lambda_i(e)$ for $M \in \Om$ and 
 \end{flushleft}
 \item \begin{flushleft}
 	Now for the above markov chain we can see that the stationary probability distribution is propotional to $\Lambda_i$. Now we will explain how we update $w$'s.\\
-	We want $w_i(u,v)$ to be close to $w_i^*(u,v)$, where $w^*_i(u,v) = \frac{\Lambda_i(\mcM)}{\Lambda_i(\mcM(u,v))}$. The intuition behind choosing $w^*$ is that if $w=w^*$ then each pattern (pattern is defined as the sets $\mcM\cup \{\mcM(u,v)| (u,v)\in V_1 \times V_2\}$, there are ($n^2+1$) patterns) would be equally likely in the stationary probability distribution.
+	We want $w_i(u,v)$ to be close to $w_i^*(u,v)$, where $w^*_i(u,v) = \frac{\lambda_i(\mcM)}{\lambda_i(\mcM(u,v))}$. The intuition behind choosing $w^*$ is that if $w=w^*$ then each pattern (pattern is defined as the sets $\mcM\cup \{\mcM(u,v)| (u,v)\in V_1 \times V_2\}$, there are ($n^2+1$) patterns) would be equally likely in the stationary probability distribution.
 \end{flushleft}
 \item We want that $w^*(u,v)/2 \leq w(u,v) \leq 2w^*(u,v)$ because of the following theorem.
 
@@ -227,7 +227,7 @@ in order to get a $5/6$ factor approximation to $w^*(u,v)$.We will use this appr
 	Now for the intialization step that is setting up $w_i(u,v)$ for all $i,u,v$.
 	Since markov chain took $O(n^7 \log n )$ steps and for each $i$ we generated $O(n^2\log(1/\hat{\eta}))$ and there are total $r=n^2 \log{n}$ iterations of i so we have total $O(n^{11} (\log{n})^2 \cdot \log(1/\hat{\eta}))$ steps in the intialization process. Now we need to just set $\hat{\eta}$ hence $\eta$.\\
 	Recall that $\hat{\eta}$ is the failure probability on each occasion that we use a sample mean to estimate an expectation. If we are to achieve overall failure probability $\eta$ then we must set $\hat{\eta}=O\left(\eta /\left(n^4 \log n\right)\right)$, since there are $O\left(n^4 \log n\right)$ individual estimates to make in total. And we set $\eta$ to $\delta/2$ or some lesser factor of $\delta$. Now we get total steps equals
-	$O(n^{11} (\log{n})^2 \cdot (\log(1/\eta)+ \log(n)))$ since $\log(n)$ dominates over $\log(1/\delta)=\log(\eta)$ hence we get that the initialization process takes total $O\left(n^{11}(\log n)^3\right)$ time hence we are done.
+	$O(n^{11} (\log{n})^2 \cdot (\log(1/\eta)+ \log(n)))$ since $\log(n)$ dominates over $\log(1/\delta)=\log(1/\eta)$ hence we get that the initialization process takes total $O\left(n^{11}(\log n)^3\right)$ time hence we are done.
 \end{flushleft}
 \subsection{General Weights}
 \begin{flushleft}
