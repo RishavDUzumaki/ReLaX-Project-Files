@@ -1,0 +1,427 @@
+So what we know is that the mixing time of a random walk classically is propotional to $\frac{1}{\delta}$ but we will introduce the notion of quantum walks in this section which gives us a quadratic speedup and we get the mixing time propotional to $\frac{1}{\sqrt{\delta}}$. We would want to use this speedup to get an algorithm to compute the approximate number of perfect matchings in a bipartite graph which has better complexity than the best known classical bound. For that we want to simulate the above markov chain using quantum walks.
+\\
+\subsection{Syzedegy's Walk and Spectral Analysis}
+We will first present the notion of Syzedgy's quantum walk and do a spectral analysis for it.\\
+We start with the introduction of bipartite walks in the classical framework remarking that every walk can be made bipartite by a simple "duplicating" operation. Let $X$ and $Y$ be two finite sets and $P=\left(p_{x, y}\right), Q=$ $\left(q_{y, x}\right)$ be matrices describing probabilistic maps from $X$ to $Y$ and $Y$ to $X$, respectively. Since $P$ and $Q$ are stochastic, we have $\sum_{y \in Y} p_{x, y}=1$ for every $x \in X$ and $\sum_{x \in X} q_{y, x}=1$ for every $y \in Y$, and all $p_{x, y}, q_{y, x}$ are non-negative. If we have a single probabilistic function $P$ from $X$ to $X$ (i.e. a Markov chain), in order to create a bipartite walk we can set $q_{y, x}=p_{y, x}$ for every $x, y \in$ $X$, i.e. we set $Q=P$.
+
+We quantize walk $(P, Q)$ by defining two operators on the Hilbert space with basis states
+$$
+\{|x\rangle|y\rangle \mid x \in X, y \in Y\}
+$$
+
+Define states
+$$
+\phi_x=\sum_{y \in Y} \sqrt{p_{x, y}}|x\rangle|y\rangle
+$$
+for every $x \in X$ and
+$$
+\psi_y=\sum_{x \in X} \sqrt{q_{y, x}}|x\rangle|y\rangle
+$$
+for every $y \in Y$. Let $A=\left(\phi_x\right)_x$ be the matrix composed of column vectors $\phi_x(x \in X)$ and $B=\left(\psi_y\right)_y$ be the matrix composed of column vectors $\psi_y(y \in Y)$. Our walk operator, $W$ will be the product of
+$$
+\begin{aligned}
+	\operatorname{ref}_1 & =2 A A^*-I ; \\
+	\operatorname{ref}_2 & =2 B B^*-I .
+\end{aligned}
+$$
+
+In expression:
+$$
+W=\operatorname{ref}_2 \mathrm{ref}_1 .
+$$
+
+Let $\mathcal{C}(A)$ is the column space of $A$ and $\mathcal{C}(B)$ be the column space of $B$. Observe that $A^* A=I_X$, therefore $\left(2 A A^*-I\right) A=A$. Also, for any $\phi \in \mathcal{C}(A)^{\perp}$ we have $\left(2 A A^*-I\right) \phi=-\phi$. Therefore $\operatorname{ref}_1$ is a reflection on the subspace $\mathcal{C}(A)$. Similarly, ref ${ }_2$ is a reflection on the subspace $\mathcal{C}(B)$. In the study of $W$ a central role will be played by the matrix $D=A^* B$. We call $D$ the discriminant of matrix of the quantized walk operator $W$. It follows from the definitions that
+$$
+D_{x, y}=\sqrt{p_{x, y} q_{y, x}} \quad \text { for every } x \in X, y \in Y .
+$$
+\begin{flushleft}
+	
+
+\textbf{Definition(Quantization)} Let $P, Q, A, B, D, W$ as above. Then the quantization of bipartite walk $(P, Q)$ is the unitary operator $W_{P, Q}=W$. We also write $A_{P, Q}$, $B_{P, Q}$ and $D_{P, Q}$ for $A, B$ and $D$, respectively, if $(P, Q)$ is not clear from the context. If $P=Q$ then we use the shorthand $W_P$ for $W_{P, Q}$, etc.
+Let the columns of matrices $A$ and $B$ be elements of a Hilbert space $H$ and let $A^* A=I_n, B^* B=I_m$. Then operators $r e f_A=2 A A^*-I, r e f_B=2 B B^*-I$ are reflections on subspaces $\mathcal{C}(A)$ and $\mathcal{C}(B)$, respectively. \end{flushleft}
+In this section we compute spectra of $W=r e f_A r e f_B$.
+ Our formula turns out to be very useful in the study of quantum walks. Our expressions will use the singular values and vectors of the following matrix:
+ \begin{flushleft}
+ 	
+ 
+\textbf{(Discriminant Matrix)} The discriminant matrix for $\operatorname{ref}_{\mathrm{B}} \mathrm{ref}_{\mathrm{A}}$ is
+$$
+D(A, B)=A^* B .
+$$
+\end{flushleft}
+If we allow the subspaces on which we reflect be represented by arbitrary orthonormed bases (rather than by $A$ and $B$ in particular) then the discriminant matrix is determined only up to unitary multiplicators from left and right.
+
+We can naturally interpret $v \rightarrow D(A, B) v$ as a map from $\mathcal{C}(B)$ to $\mathcal{C}(A)$ if we view $v$ as a vector expressed in the $\left\{b_j\right\}_{j=1}^m$ bases and the result vector as a one expressed in the $\left\{a_i\right\}_{i=1}^n$ bases. To put this into formulas, we can define a map, where $B v$ is mapped into $\left(A A^*\right) B v=A D(A, B) v$. This map is an orthogonal projection of $\mathcal{C}(B)$ to $\mathcal{C}(A)$, since $A A^*$ is an orthogonal projector to the space $\mathcal{C}(A)$. Similarly $D(A, B)^*$ can be interpreted as an orthogonal projection from $\mathcal{C}(A)$ to the space $\mathcal{C}(B)$. Let $\lambda$ be a singular value of $D(A, B)$ with associated right singular unit vector $v$ and left singular unit vector $w$. Then we have
+$$
+\begin{aligned}
+	D(A, B) v & =\lambda w \\
+	D(A, B)^* w & =\lambda v .
+\end{aligned}
+$$
+
+Since $|B v|=|v|,|A w|=|w|$, and since projections do not increase length we get:
+
+\begin{lemma}
+	
+ All singular values of $D(A, B)$ are at most one.\end{lemma}
+
+Using the above observation, for a left-right singular vector pair $v, w$ of $D(A, B)$ we can write the associated singular value as $\cos \theta$ for some $0 \leq \theta \leq \frac{\pi}{2}$. In the linear algebra literature $\theta$ is called a canonical angle between subspaces $\mathcal{C}(A)$ and $\mathcal{C}(B)$. We have that $\theta=0$ iff the corresponding singular vectors are in $\mathcal{C}(A) \cap \mathcal{C}(B)$. The angle $\theta$ has a geometric meaning: it is the angle between $A w$ and $B v$ (indeed, $w^* A^* B v=\cos \theta$ ).
+\begin{theorem}
+	
+
+Theorem 1 (Spectral Lemma) Let $H$ be a Hilbert space, $A, B \leq H$ subspaces, and let $\mathrm{ref}_{\mathrm{A}}$ and $\mathrm{ref}_{\mathrm{B}}$ be reflections on $\mathcal{C}(A)$ and $\mathcal{C}(B)$. Let $\cos \theta_1, \ldots, \cos \theta_l$ be those singular values of $D(A, B)=A^* B$ that lie in the $(0,1)$ open interval, and let the associated singular vector pairs be $v_k, w_k$ for $(1 \leq k \leq l)$. Then those eigenvalues of the unitary operator $W=\operatorname{ref}_{\mathrm{B}} \mathrm{ref}_{\mathrm{A}}$ that have non-zero imaginary part are exactly
+$$
+e^{-2 i \theta_1}, e^{2 i \theta_1}, \ldots, e^{-2 i \theta_l}, e^{2 i \theta_l} .
+$$
+
+The (un-normalized) eigenvectors associated with these eigenvalues (in order) are
+$$
+\begin{array}{r}
+	A w_1-e^{-i \theta_1} B v_1, A w_1-e^{i \theta_1} B v_1, \ldots, 
+	A w_l-e^{-i \theta_l} B v_l, A w_l-e^{i \theta_l} B v_l .
+\end{array}
+$$
+
+In (3) the singular values are listed with multiplicity. Furthermore,
+\begin{enumerate}
+	
+
+\item On $\mathcal{C}(A) \cap \mathcal{C}(B)$ operator $W$ acts as the identity. $\mathcal{C}(A) \cap \mathcal{C}(B)$ coincides with the set of left (right) singular vectors of $D(A, B)$ with singular value 1 .
+\item On $\mathcal{C}(A) \cap \mathcal{C}(B)^{\perp}$ operator $W$ acts as reflection on the center (i.e. as $-I) . \mathcal{C}(A) \cap \mathcal{C}(B)^{\perp}$ coincides with the set of left singular vectors of $D(A, B)$ with singular value 0 .
+\item On $\mathcal{C}(B) \cap \mathcal{C}(A)^{\perp}$ operator $W$ acts as reflection on the center. $\mathcal{C}(B) \cap \mathcal{C}(A)^{\perp}$ coincides with the set of right singular vectors of $D(A, B)$ with singular value 0.
+\item On $\mathcal{C}(A)^{\perp} \cap \mathcal{C}(B)^{\perp}$ operator $W$ acts as the identity.
+\end{enumerate}
+\end{theorem}
+
+
+The above is a complete description of the eigenvalues and eigenvectors of operator $W$ acting on $H$.
+
+\begin{proof} Let $\pi_A=A A^*$ and $\pi_B=B B^*$ be the orthogonal projector operators (in $H$ ) to $\mathcal{C}(A)$ and $\mathcal{C}(B)$, respectively. Then $W=\left(2 \pi_B-I\right)\left(2 \pi_A-I\right)$. Since for every $v, w$ singular vector pair with singular value $\cos \theta$ we have $\pi_A B v=(\cos \theta) A w$ and $\pi_B A w=(\cos \theta) B v$ we can conclude that the (at most) two-dimensional subspace $\langle B v, A w\rangle$ is invariant under the action $W$. Moreover, this action is a composition of two reflections, the first on axis $A w$ and then on axis $B v$. The case when $\langle B v, A w\rangle$ is one dimensional gives 1-3, and we leave this easy case to the reader. The subspace $\langle B v, A w\rangle$ is two-dimensional if and only if $\cos \theta \in(0,1)$. Considering that the angle between $B v$ and $A w$ is $\theta$, the formulas for the spectrum and eigenvalues of $W$ on $\langle B v, A w\rangle$ follow from the familiar expressions for the two dimensional case. In particular, it is well known that if we reflect on two axes, we obtain a rotation with an angle that is twice of the one between the axes. Since the set of left and right singular vectors form complete systems, we are done with the description of $W$ on $\langle\mathcal{C}(A), \mathcal{C} B\rangle$. We need to describe $W$ on $\langle\mathcal{C}(A), \mathcal{C}(B)\rangle^{\perp}=\mathcal{C}(A)^{\perp} \cap \mathcal{C}(B)^{\perp}$. On this subspace $W$ is simply a product of two reflections on the center, therefore it is the identity.
+
+\end{proof}
+\subsection{Application of Syzedegy's Walk for sampling Markov Chains}
+ Let $\mathcal{H}=\mathbb{C}^N \otimes \mathbb{C}^N$. The basis states of $\mathcal{H}$ are denoted by $|x y\rangle$ for $x, y \in \Omega$. For $x \in \Omega$, define the normalized vectors
+$$
+\left|p_x\right\rangle=\sum_{y \in \Omega} \sqrt{p_{x y}}|y\rangle
+$$
+where $p_{x y}$ denotes the transition probability from $x$ to $y$. A quantum update is any unitary $U$ that satisfies
+$$
+U|x\rangle|0\rangle=|x\rangle\left|p_x\right\rangle
+$$
+for some fixed state $0 \in \Omega$ and all $x \in \Omega$. We refer to the cost to realize $U$ and its inverse $U^{\dagger}$ as the quantum update cost.
+
+To construct the quantum walk, we define the subspaces
+$$
+\begin{aligned}
+	\mathcal{A} & =\operatorname{span}\{|x\rangle|0\rangle: x \in \Omega\} \\
+	\mathcal{B} & =U^{\dagger} S U \mathcal{A}
+\end{aligned}
+$$
+where $S$ denotes that the unitary operator swapping the two tensor components of $\mathcal{H}$. For $\mathcal{K}=\mathcal{A}, \mathcal{B}$, denote by $\Pi_{\mathcal{K}}$ the orthogonal projection onto $\mathcal{K}$ and by
+$$
+R_{\mathcal{K}}=2 \Pi_{\mathcal{K}}-I .
+$$
+the reflection around $\mathcal{K}$.
+\begin{definition}[Quantum Walk]
+	
+
+ The quantum walk $W(P)$ based on the classical reversible Markov chain $P$ is defined to be the unitary operation (rotation)
+$$
+W(P)=R_{\mathcal{B}} \cdot R_{\mathcal{A}}
+$$
+
+The quantum walk $W(P)$ can be realized by applying both $U$ and $U^{\dagger}$ twice:
+$$
+W(P)=U^{\dagger} \cdot S \cdot U \cdot R_{\mathcal{A}} \cdot U^{\dagger} \cdot S \cdot U \cdot R_{\mathcal{A}} .
+$$
+
+ This is different from the definition used in the previous subsection which is.
+$$
+\tilde{W}(P)=R_{\tilde{\mathcal{B}}} \cdot R_{\tilde{\mathcal{A}}}
+$$
+where
+$$
+\begin{aligned}
+	\tilde{\mathcal{A}} & =\operatorname{span}\left\{|x\rangle\left|p_x\right\rangle: x \in \Omega\right\}=U \mathcal{A} \\
+	\tilde{\mathcal{B}} & =\operatorname{span}\left\{\left|p_x\right\rangle|x\rangle: x \in \Omega\right\}=U \mathcal{B} .
+\end{aligned}
+$$
+\end{definition}
+
+
+Since $W(P)$ and $\tilde{W}(P)$ are equal up to conjugation by $U$, we can apply the spectral analysis from previous section to determine the spectrum of $W(P)$. We refer to the subspace $\mathcal{A}+\mathcal{B}$ as the busy subspace and to its orthogonal complement, i.e., $\mathcal{A}^{\perp} \cap \mathcal{B}^{\perp}$, as the idle subspace. Clearly, the operator $W(P)$ acts as identity on the idle subspace. On the busy subspace, the spectrum of $W(P)$ is as follows.
+
+\begin{theorem}
+	
+Let $P$ be a time-reversible Markov chain. Let $\theta_1, \ldots, \theta_M \in\left(0, \frac{\pi}{2}\right)$ be such that $\left|\lambda_1\right|=$ $\cos \left(\theta_1\right), \ldots,\left|\lambda_M\right|=\cos \theta_M$ where $M \leq N-1$ and the remaining eigenvalues are equal to 0 , i.e., $\lambda_{M+1}, \ldots, \lambda_{N-1}=0$.
+\begin{enumerate}
+	 
+
+\item On $\mathcal{A} \cap \mathcal{B}$ the operator $W(P)$ acts as the identity $I$. This subspace is one dimensional and is spanned by the eigenvector $|\pi\rangle|0\rangle$ where
+$$
+|\pi\rangle=\sum_x \sqrt{\pi_x}|x\rangle
+$$
+is the quantum sample of the stationary distribution $\pi$ of $P$.
+\item On $\mathcal{A} \cap \mathcal{B}^{\perp}$ and $\mathcal{A}^{\perp} \cap \mathcal{B}$ the operator $W(P)$ acts as $-I$. The dimensions of $\mathcal{A} \cap \mathcal{B}^{\perp}$ and $\mathcal{A}^{\perp} \cap \mathcal{B}$ are equal to $N-1-M$, i.e., the dimension of the kernel of $P$.
+\item On $\mathcal{A}+\mathcal{B}$ those eigenvalues of $W(P)$ that have nonzero imaginary part are exactly $e^{ \pm 2 i \theta_1}, \ldots, e^{ \pm 2 i \theta_M}$ with the same multiplicity.
+\item $W(P)$ has no other eigenvalues on $\mathcal{A}+\mathcal{B}$.
+\end{enumerate}
+\end{theorem} 
+Now we have the following lemmas which lead us to the main result of how to sample  using the markov chain.
+\begin{lemma}
+	 Let $\left|t_0\right\rangle, \ldots,\left|t_r\right\rangle$ be arbitrary quantum states in $\mathbb{C}^d$ with $\left|\left\langle t_i \mid t_{i+1}\right\rangle\right|^2 \geq p$ for $i=0, \ldots, r-1$. Given the state $\left|t_0\right\rangle$, we can prepare a state $\left|\tilde{t}_r\right\rangle$ such that
+	$$
+	\|\left|\tilde{t}_r\right\rangle-\left|t_r\right\rangle \| \leq \epsilon_1,
+	$$
+	for any $\epsilon_1>0$, by invoking the unitaries from $\left\{R_i, R_i^{\dagger}\right.$ : $i=0, \ldots, r\}$ no more than
+	$$
+	L=\frac{12 r \log \left(2 r / \epsilon_1\right)}{\log (1 /(1-p))}
+	$$
+	times. Where $R_i$ is defined as the $(2\Pi_i-1)$ , and $\Pi_i=|t_i\rangle\langle t_i |$
+\end{lemma}
+\begin{lemma}
+	 Let $W$ be a unitary acting on $\mathbb{C}^d$ with unique eigenvector $\left|\psi_0\right\rangle$ with eigenvalue $\lambda_0=1$. Denote the remaining eigenvectors and eigenvalues of $W$ by $\left|\psi_j\right\rangle$ and $\lambda_j=e^{2 \pi i \varphi_j}$ for $j=1, \ldots, d-1$, respectively. Let
+	$$
+	\Delta=\min _{j=1, \ldots, d-1}\left|\varphi_j\right|
+	$$
+	be the phase gap of $W$. Let $\Pi$ be the projector onto the space spanned by $\left|\psi_0\right\rangle$ and $\Pi^{\perp}$ the projector onto the orthogonal complement. Let $R$ be the unitary that acts on $\mathbb{C}^d$ as follows
+	$$
+	R=\omega \Pi+\Pi^{\perp} .
+	$$
+	Let
+	$$
+	\begin{aligned}
+		a & =\lceil\log (1 / \Delta)\rceil \\
+		c & =\left\lceil\log \left(1 / \sqrt{\epsilon_2}\right)\right\rceil
+	\end{aligned}
+	$$
+	for some $\epsilon_2>0$. Then, there is a quantum circuit $\tilde{R}$ acting on $\mathbb{C}^d \otimes\left(\mathbb{C}^2\right)^{\otimes a c}$ that invokes the controlled-W gate $2^{a+1} \cdot c$ times and has the following properties: for $j=0$,
+	$$
+	\tilde{R}\left|\psi_0\right\rangle|0\rangle^{\otimes a c}=\left(R\left|\psi_0\right\rangle\right)|0\rangle^{\otimes a c}
+	$$
+	and for $j \neq 0$,
+	$$
+	\tilde{R}\left|\psi_j\right\rangle|0\rangle^{\otimes a c}=\left(R\left|\psi_j\right\rangle\right)|0\rangle^{\otimes a c}+|\xi\rangle,
+	$$
+	where $|\xi\rangle$ is some error vector in $\mathbb{C}^d \otimes\left(\mathbb{C}^2\right)^{\otimes a c}$ with
+	$$
+	\||\xi\rangle \| \leq 2 \sqrt{\epsilon_2} .
+	$$
+\end{lemma}
+\break
+The above two lemmas give us the following theorem . We will quote the following paper () for the proves of the above lemmas. Lemma 3.4 is proved using Grover's Amplitude Amplification for whose proof we quote the following paper ().
+\begin{theorem}
+	Let $P_0, P_1, \ldots, P_r$ be classical Markov chains with stationary distributions $\pi_0, \pi_1, \ldots, \pi_r$ and spectral gaps $\delta_0, \delta_1, \ldots, \delta_r$, respectively. Assume the stationary distributions of adjacent Markov chains are close to each other in the sense that their stationary distributions $\pi_i$ and $\pi_{i+1}$ are close with respect to fidelity, i.e.,
+	$$
+	\left(\sum_{x \in \Omega} \sqrt{\pi_i(x)} \sqrt{\pi_{i+1}(x)}\right)^2=\left|\left\langle\pi_i \mid \pi_{i+1}\right\rangle\right|^2 \geq p
+	$$
+	for $i=0, \ldots, r-1$,
+	$$
+	\min \left\{\delta_i: i=0, \ldots, r\right\} \geq \delta,
+	$$
+	and we can prepare the quantum sample $\left|\pi_0\right\rangle$.
+	Then, for any $\epsilon>0$, there is a quantum sampling algorithm, making it possible to sample according to a probability distribution $\tilde{\pi}_r$ that is close to $\pi_r$ with respect to the total variation distance, i.e., $D\left(\tilde{\pi}_r, \pi_r\right) \leq \epsilon$.
+	
+	The algorithm invokes the controlled- $W_i$ operators at most $2^{a+1} \cdot c \cdot L$ times where
+	$$
+	\begin{aligned}
+		L & =\frac{12 r \log (8 r / \epsilon)}{\log (1 /(1-p))} \\
+		a & =\lceil\log (1 / \Delta)\rceil \\
+		c & =\left\lceil\log \left(\frac{96 r \log (8 r / \epsilon)}{\epsilon \log (1 /(1-p))}\right)\right\rceil .
+	\end{aligned}
+	$$
+	
+\end{theorem}\vspace{5mm}
+\begin{proof}
+	 Lemma 3.4 shows that, given the initial state $\left|\pi_0\right\rangle$, we can prepare a state $\left|\tilde{\pi}_r\right\rangle$ with $\|\left|\pi_r\right\rangle-\left|\tilde{\pi}_r\right\rangle \| \leq \epsilon_1$ by invoking the unitaries from the set $\left\{R_i, R_i^{\dagger}: i=\right.$ $0, \ldots, r-1\}$ no more than
+	$$
+	L=\frac{12 r \log \left(2 r / \epsilon_1\right)}{\log (1 /(1-p))}
+	$$
+	times.
+	In Lemma 3.4 we assumed that we can implement these exactly. However, in reality we can only implement the operators $\tilde{R}_i$ and their inverses $\tilde{R}_i^{\dagger}$ as described in Lemma 3.5. This approximation adds an error vector $|\xi\rangle$ every time an operator $\tilde{R}_i$ or $\tilde{R}_i^{\dagger}$ is applied, where $\||\xi\rangle \| \leq 2 \sqrt{\epsilon_2}$ for some $\epsilon_2>0$.
+	
+	Let $|\tilde{\psi}\rangle$ be the state obtained by implementing Lemma 3.5 using $\tilde{R}_i$ to approximate $R_i$. Then, since these operators or their inverses are invoked no more than $L$ times we have
+	$$
+	|\tilde{\psi}\rangle=\left|\tilde{\pi}_r\right\rangle_{\mathcal{H}}|0\rangle_{\mathcal{A}}^{\otimes a c^{\prime}}+|\xi\rangle
+	$$
+	where $c^{\prime}=\left\lceil\log \left(1 / \sqrt{\epsilon_2}\right)\right\rceil$ and $|\xi\rangle$ is some vector with
+	$$
+	\||\xi\rangle \| \leq 2 L \sqrt{\epsilon_2} .
+	$$
+	$\mathcal{H}$ is the Hilbert space that our quantum samples live in and $\mathcal{A}$ is the Hilbert space of the ancilla qubits that are required to implement the approximate phase gates $\tilde{R}_i$ and their inverses.
+	
+	Let
+	$$
+	|\psi\rangle=\left|\pi_r\right\rangle|0\rangle^{\otimes a c}
+	$$
+	be the ideal state. We choose $\epsilon_1=\epsilon / 4$ and $\epsilon_2=$ $\epsilon^2 /\left(64 L^2\right)$ so that
+	$$
+	\begin{aligned}
+		\||\psi\rangle-|\tilde{\psi}\rangle \| & \leq \||\psi\rangle-\left|\tilde{\pi}_r\right\rangle|0\rangle^{\otimes a c}\|+\|\left|\tilde{\pi}_r\right\rangle|0\rangle^{\otimes a c}-|\tilde{\psi}\rangle \| \\
+		& \leq \epsilon_1+2 L \sqrt{\epsilon_2} \\
+		& =\epsilon / 4+\epsilon / 4 \\
+		& =\epsilon / 2 .
+	\end{aligned}
+	$$
+	
+	For each $x \in \Omega$, we define the projector
+	$$
+	\Lambda_x=|x\rangle\langle x|\otimes| 0\rangle\langle\left. 0|^{\otimes a c}\right.
+	$$
+	acting on $\mathcal{H} \otimes \mathcal{A}$. Let
+	$$
+	\Lambda_0=I_{\mathcal{H A}}-I_{\mathcal{H}} \otimes|0\rangle\langle\left. 0|^{\otimes a c} .\right.
+	$$
+	
+	Let $\Omega^{\prime}=\Omega \cup\{0\}$. Observe that the desired distribution $\pi$ is equal to the probability distribution given by
+	$$
+	\pi(x)=\| \Lambda_x|\psi\rangle \|^2 .
+	$$
+	
+	Our protocol yields the probability distribution
+	$$
+	\tilde{\pi}(x)=\| \Lambda_x|\tilde{\psi}\rangle \|^2 .
+	$$
+	
+	We now bound the total variation distance between $\pi$ and $\tilde{\pi}$ from above. For a subset $S \subseteq \Omega^{\prime}$, let
+	$$
+	\Lambda_S=\sum_{x \in S} \Lambda_x
+	$$
+	
+	We have
+	$$
+	\begin{aligned}
+		D(\pi, \tilde{\pi}) & =\max _{S \subseteq \Omega^{\prime}}|\pi(S)-\pi(\tilde{S})| \\
+		& .=\max _{S \subseteq \Omega^{\prime}}|\| \Lambda_S| \psi\rangle \|^2-\| \Lambda_S|\tilde{\psi}\rangle \|^2 \mid \\
+		& \leq 2 \max _{S \subseteq \Omega^{\prime}}|\| \Lambda_S| \psi\rangle \|-\| \Lambda_S|\tilde{\psi}\rangle \| \mid \\
+		& \leq 2 \||\psi\rangle-|\tilde{\psi}\rangle \| \\
+		& \leq \epsilon
+	\end{aligned}
+	$$
+	
+	It follows from above lemmas that we invoke the controlled- $W_i$ operators or their inverses at most $2^{a+1} \cdot c \cdot L$ times.
+\end{proof}
+\break
+We would like to use the above theorem to implement our intermediate Markov Chains as they also don't change much in subsequent iterations we would like to use the above algorithm to perform our desired sampling. For that we need to implement the walk operators $W_i$'s. As we can see we use a metropolis filter in the classical algorithm to get a certain probability distribution. So we need to find a method which implements the walk operators  $W_i$ given a set of parameters for the metropolis rule.
+\subsection{Implementing the walk operators} We will try to use the  ideas of the following paper () to implement a walk operator. A brief of the ideas of the paper is written below. 
+\\ Here we will want to prepare a distribution over eigen states of a general hamiltonian. We want a state with the following density operator 
+$$\rho= \sum_{i \in \Omega}\pi_i|\varphi_i\rangle \langle\varphi_i|$$, Where $\varphi_i$ are the  eigenstates of a general hamiltonian and $\pi$ is the stationary probability distribution of a Markov chain over $\Omega$ whose transition rule is guided by a metropolis filter. We have
+
+
+$$	\pi_i m_{ij} = \pi_j m_{ji}\\$$
+	
+$$m_{ij}=s_{ij}\cdot z_{ij}$$
+$$s_{ij}=s_{ji}$$
+$$z_{ij}= \min \{1, \frac{\pi_j}{\pi_i}\}$$
+We will denote $\pi_i$ by $e^{-\beta E_i}$, just to follow the notation of the paper. We will design an unitary for which we get the above state by tracing out from an unique eigenvector with eigenvalue $1$ on a certain subspace.\\
+Now the implementation of the paper is as follows.
+
+\begin{flushleft}
+	Now, let us include into our Hilbert space an extra qubit initialized in $|0\rangle$ and define a more compact notation,
+	$$
+	|i\rangle \equiv\left|\varphi_i\right\rangle\left|\tilde{\varphi}_i\right\rangle|0\rangle
+	$$
+	
+	The information of a Markov chain can be encoded in a pair of unitary operators $U_X$ and $U_Y$ (We will define the construction of $U_X$ in the following part),
+	$$
+	\begin{aligned}
+		& U_X|i\rangle=\sum_k\left(\sigma_{i k}\left|\varphi_i\right\rangle\left|\varphi_k\right\rangle|0\rangle+\gamma_{i k}\left|\varphi_i\right\rangle\left|\varphi_k\right\rangle|1\rangle\right) \\
+		& U_Y|j\rangle=\sum_m\left(\sigma_{j m}\left|\varphi_m\right\rangle\left|\varphi_j\right\rangle|0\rangle+\gamma_{j m}\left|\varphi_j\right\rangle\left|\varphi_m\right\rangle|1\rangle\right)
+	\end{aligned}
+	$$
+	where $\sigma_{i k} \equiv \alpha_{k \tilde{i}} \sqrt{z_{i k}}, \gamma_{i k} \equiv \alpha_{k \tilde{i}} \sqrt{1-z_{i k}}$, and $\alpha_{k \tilde{i}} \equiv$ $\left\langle\varphi_k|K| \tilde{\varphi}_i\right\rangle$. Here $K$ is an unitary operator which encodes the transition without the metropolis filter(we will go in detail in the construction part). Note that $U_Y$ can be obtained from $U_X$ by controlled-SWAP operation.
+	
+	From the definitions of $U_X$ and $U_Y$ we get that -
+	$$
+	\left\langle j\left|U_X^{\dagger} U_Y\right| i\right\rangle=\left|\alpha_{j \tilde{i}}\right|^2\left(z_{i j} z_{j i}\right)^{1 / 2},
+	$$
+	where we used $\left\langle\varphi_i \mid \tilde{\varphi}_j\right\rangle=\left\langle\varphi_j \mid \tilde{\varphi}_i\right\rangle$. On the other hand,
+	$$
+	\left\langle i\left|U_X^{\dagger} U_Y\right| i\right\rangle=\left|\alpha_{i \tilde{i}}\right|^2+\sum_k\left|\alpha_{k \tilde{i}}\right|^2\left(1-z_{i k}\right),
+	$$
+	which, as we shall see, can be interpreted as the probability of not undergoing a transition.
+	
+	\textbf{Construction of the operator $W$ }- Now, using above equation, we obtain the following decomposition:
+	$$
+	\left\langle j\left|U_X^{\dagger} U_Y\right| i\right\rangle=\left\langle j\left|D_\pi^{1 / 2}\right| j\right\rangle\langle j|M| i\rangle\left\langle i\left|D_\pi^{-1 / 2}\right| i\right\rangle
+	$$
+	where $D_\pi \equiv \sum_{j=0}^{N-1} \pi_j|j\rangle\langle j|$ is a diagonal matrix, and $M \equiv \sum_{i, j} m_{i j}|j\rangle\langle i|$, with $m_{i i} \equiv\left\langle i\left|U_X^{\dagger} U_Y\right| i\right\rangle$ and $m_{i j} \equiv$ $\left|\alpha_{j \tilde{i}}\right|^2 z_{i j}$ for $j \neq i$ is the transition matrix of the Markov chain. Within the subspace $\{|i\rangle\}$, the above equation implies that $U_X^{\dagger} U_Y$ and $M$ are similar matrices, which means that
+	they have the same set of eigenvalues $\lambda_k$ .  This property allows us to construct an operator
+	$$
+	W \equiv\left(2 \Lambda_2-I\right)\left(2 \Lambda_1-I\right) \quad,
+	$$
+	where
+	$$
+	\Lambda_1 \equiv \sum_{i=0}^{N-1}|i\rangle\langle i| \quad \text { and } \quad \Lambda_2 \equiv U_X^{\dagger} U_Y \Lambda_1 U_Y^{\dagger} U_X .
+	$$
+	
+	The spectral properties of $W$ can be seen in the following way: define $\left|\alpha_k\right\rangle \equiv \sum_{i=0}^{N-1} a_{k i}|i\rangle$ to be the eigenvectors of $\Lambda_1 U_X^{\dagger} U_Y \Lambda_1$, the eigenvalue equation can be written as
+	$$
+	\Lambda_1 U_X^{\dagger} U_Y\left|\alpha_k\right\rangle=\lambda_k\left|\alpha_k\right\rangle .
+	$$
+	
+	On the other hand, using the fact that $\Lambda_1 U_X^{\dagger} U_Y \Lambda_1=$ $\Lambda_1 U_Y^{\dagger} U_X \Lambda_1$, we have,
+	$$
+	\Lambda_2\left|\alpha_k\right\rangle=\lambda_k U_X^{\dagger} U_Y\left|\alpha_k\right\rangle .
+	$$
+	
+	Now if we start with vectors within $\Lambda_1, W$ can be block-diagonalized into subspace of $2 \times 2$ matrices $w_k$ spanned by the basis $\left\{\left|\alpha_k\right\rangle, U_X^{\dagger} U_Y\left|\alpha_k\right\rangle\right\}$. Explicitly,
+	$$
+	w_k=\left[\begin{array}{cc}
+		\cos \left(2 \theta_k\right) & -\sin \left(2 \theta_k\right) \\
+		\sin \left(2 \theta_k\right) & \cos \left(2 \theta_k\right)
+	\end{array}\right],
+	$$
+	where $\cos \theta_k \equiv \lambda_k$. Note that the eigenvalues of $w_k$ is $e^{ \pm i \theta_k}$. In the case of $k=0$ where $\lambda_0=1$ (or $\theta_0=$ $0), w_0=I$ is simply an identity. Now we get that ,
+	$$
+	\left|\alpha_0\right\rangle=\sum_{i=0}^{N-1} \sqrt{\pi_i}|i\rangle .
+	$$
+	
+	Recall that $|i\rangle \equiv\left|\varphi_i\right\rangle\left|\tilde{\varphi}_i\right\rangle|0\rangle$, the state $\left|\alpha_0\right\rangle$ becomes the Gibbs thermal state $\rho_{t h}=e^{-\beta H} / \operatorname{Tr}\left[e^{-\beta H}\right]$ when the other qubits are traced out.\\
+	One of the most important features about $W$ is that the minimum eigenvalue gap $\Delta_{\text {min }} \equiv\left|2 \theta_1\right|$ of $W$ is less than two times the square root of the gap $\delta \equiv 1-\lambda_1$ of the transition matrix $M$ (using $2 \theta \geq\left|1-e^{2 i \theta}\right|=$ $\left.2 \sqrt{1-\cos ^2 \theta}\right)$
+	$$
+	\Delta_{\min } \geq 2 \sqrt{\delta}
+	$$
+\end{flushleft}
+\begin{flushleft}
+	\textbf{Construction of $U_X$ -}
+	Here we show how one may construct the unitary operator $U_X$ defined as
+	$$
+	U_X|i\rangle=\sum_k\left(\sigma_{i k}\left|\varphi_i\right\rangle\left|\varphi_k\right\rangle|0\rangle+\gamma_{i k}\left|\varphi_i\right\rangle\left|\varphi_k\right\rangle|1\rangle\right) \text {, }
+	$$
+	where
+	$$
+	\sigma_{i k} \equiv \alpha_{k \tilde{i}} \sqrt{z_{i k}} \quad, \quad \gamma_{i k} \equiv \alpha_{k \tilde{i}} \sqrt{1-z_{i k}}
+	$$
+	and
+	$$
+	\alpha_{k \tilde{i}} \equiv\left\langle\varphi_k|K| \tilde{\varphi}_i\right\rangle .
+	$$
+	
+	Here $K$ is an unitary operator which plays the same role as the spin-flip in the classical Metropolis method(K in the basis $\{|\varphi_i\rangle \}_i$ is kind of equivalent to transition without the metropolis filter), and $z_{i k}$ is the Metropolis filter . Note that $U_Y$ can be obtained from $U_X$ by a controlled-SWAP.  We assume that $K$ is symmetrical in the computational basis:
+	$$
+	\left\langle x^{\prime}|K| x\right\rangle=\left\langle x|K| x^{\prime}\right\rangle .
+	$$
+	
+	We are now ready to consider the explicit procedure for constructing $U_X$ . Starting with the paired state
+	$$
+	\left|\varphi_i\right\rangle\left|\tilde{\varphi}_i\right\rangle
+	$$
+	we apply the "kick" operator $K$ to $\left|\tilde{\varphi}_i\right\rangle$, and write
+	$$
+	K\left|\tilde{\varphi}_i\right\rangle=\sum_k \alpha_{k \tilde{i}}\left|\varphi_k\right\rangle \text {. }
+	$$
+	
+	Next, we implement the Metropolis filter by performing a controlled-rotation (based on the difference of the eigenvalues):
+	$$
+	\left|\varphi_i\right\rangle\left|\varphi_k\right\rangle|0\rangle \rightarrow\left|\varphi_i\right\rangle\left|\varphi_k\right\rangle\left(\sqrt{z_{i k}}|0\rangle+\sqrt{1-z_{i k}}|1\rangle\right),
+	$$
+	where
+	$$
+	z_{i j} \equiv\left\{1, e^{-\beta\left(E_j-E_i\right)}\right\}
+	$$
+	
+	This creates a state as described by definition of $U_X$.
+	
+\end{flushleft}
+

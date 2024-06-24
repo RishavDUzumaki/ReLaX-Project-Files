@@ -143,7 +143,7 @@ in order to get a $5/6$ factor approximation to $w^*(u,v)$.We will use this appr
 	and $MC_r$ to estimate $\frac{\Lambda_r(\mcM_G)}{\Lambda_r(\Om)}$.
 	\\Now we will explain how we estimate $\frac{\Lambda_{i+1}(\Om)}{\Lambda_i(\Om)}$. \\
 	First we will prove one bound that $$\frac{1}{4e}\leq\frac{\Lambda_{i+1}(M)}{\Lambda_i(M)}\leq 4e, \forall M \in \Om$$ 
-	\\For $M\in \mcM$ it is easy to the bound holds since $\frac{\Lambda_{i+1}(\Om)}{\Lambda_i(\Om)}$ either remains same or gets reduced by a factor of $e^{-1/2}$.\\
+	\\For $M\in \mcM$ it is easy to the bound holds since for $\frac{\Lambda_{i+1}(M)}{\Lambda_i(M)}$, $\Lambda(M)$ as we go from $i\rightarrow i+1$ either remains same or gets reduced by a factor of $e^{-1/2}$.\\
 	For $M\in \mcN$ note that since, $5/12 \leq w_i/w_{i+1} \leq 12/5$ we get that $$\frac{5}{12e^{1/2}}\leq\frac{\Lambda_{i+1}(M)}{\Lambda_i(M)}\leq \frac{12e^{1/2}}{5}, \forall M \in \mcN$$\\Hence now it is obvious that the above claim holds.
 	
 \end{flushleft}
@@ -244,3 +244,39 @@ in order to get a $5/6$ factor approximation to $w^*(u,v)$.We will use this appr
 	Output the final weights $w(u, v)$.
 \end{flushleft}
 Where $a_{max}$ and $a_{min}$ are the maximum and minimum non-zero entries of the matrix $M$ whose permanent we need to compute. We actually tweak  the error ratios a bit for this and get an approximation algorithm polynomial in $n$ , $\log{(a_{max}/a_{min})}$ and obviously $1/\varepsilon$.
+
+\subsection{Improving the complexity}
+We would now present the enhanced complexity achieved by the paper (). The enhanced complexity is a result of better analysis of the mixing time and a different way to decrease the $\lambda$'s. In this method the $\lambda$'s for all non edges get reduced in each iteration (unlike former where we decreased all the $\lambda$'s for non edges connected to one vertex at a time in  one iteration). We have the following algorithm to get the $\lambda$'s.
+\begin{flushleft}
+	\textbf{Algorithm for computing the cooling schedule $\lambda$, given parameters $s, c, \gamma$, and $D$ :}\\\vspace{3mm}
+	Set $\hat{\lambda}_0=1, i=s$ and $j=0$.\\
+	While $\hat{\lambda}_j>1 / \gamma$ do\\
+	\hspace{10mm}Set $\hat{\lambda}_{j+1}=c^{-1 / i} \hat{\lambda}_j$.\\
+	\hspace{10mm}If $i>D+1$ and $\hat{\lambda}_{j+1}<(s / \gamma)^{1 /(i-D)}$,\\
+	\hspace{15mm}Set $\hat{\lambda}_{j+1}=(s / \gamma)^{1 /(i-D)}$ and decrement $i=i-1$.\\
+	\hspace{10mm}Increment $j=j+1$.\\
+	Set $\ell=j$.\\
+	
+	The following lemma estimates the number of intermediate temperatures in the above cooling schedule, i.e., the length $\ell$ of the $\hat{\lambda}$ sequence.(Previously $\ell=r=n^2\log(n)$)
+	
+	\begin{lemma}
+		
+	 Let $c, \gamma>0, D \geq 0$ and let $\hat{\lambda}_0, \ldots, \hat{\lambda}_{\ell}$ be the sequence computed by the above algorithm. Then $\ell=O\left([(D+1) \log (s-D)+s /(s-D)] \log _c \gamma\right)$. If $c$ and $D$ are constants independent of $s$, then $\ell=O(\log s \log \gamma)$.
+	\end{lemma}
+	
+	The following lemma shows that for the sequence of the $\lambda_i$ the value of $Z(\lambda)$ changes by a factor $\leq c$ for consecutive $\lambda_i$ and $\lambda_{i+1}$. 
+	
+	\begin{lemma}
+		
+	Let $c, \gamma, D \geq 0$ and let $Z_1, \ldots, Z_q$ be a collection of polynomials of degree $s$. Suppose that for every $i \in[q]$, the polynomial $Z_i$ satisfies the following conditions:
+	i) $Z_i$ has non-negative coefficients,
+	ii) there exists $d \leq D$ such that the coefficient of $x^d$ in $Z_i$ is at least $Z_i(1) / \gamma$.
+	
+	Let $\hat{\lambda}_0, \hat{\lambda}_1, \ldots, \hat{\lambda}_{\ell}$ be the sequence constructed by the above algorithm. Then
+	$$
+	Z_i\left(\hat{\lambda}_j\right) \leq c Z_i\left(\hat{\lambda}_{j+1}\right) \quad \text { for every } i \in[q] \text { and } j \in[\ell] .
+	$$
+\end{lemma} 
+For the above algorithm we feed $s=n,c=\sqrt{2},\gamma=n!,D=1$. To get the $\lambda_i$'s for our implementation. This improves the number of iterations from $n^2\log(n)$ to $O(n\log^2(n))$.
+Also from better analysis of mixing time we get the complexity  to be $O(n^7 \log^4(n))$, which is best known classically. 
+\end{flushleft}
