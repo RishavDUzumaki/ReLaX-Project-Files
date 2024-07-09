@@ -1,0 +1,143 @@
+In this section we will try to give an algorithm using the above sections to give a $\tilde{O}(n^5)$ quantum algorithm for approximately counting number of perfect matchings in a bipartite graph.
+\begin{flushleft}
+	We know from the analysis of the (envaz) paper that the Markov Chains we get in the (envaz) paper in every iteration has spectral gap of order $O(1/n^4)$ and so if we use the method described in Theorem 3.6 to construct we will use $\tilde{O}(n^2)$ many applications of $W_{i+1}$ to get from $\pi_i$ to $\pi_{i+1}$. To construct $W_{i} $ we will use the method from section 3.3. Also for knowing the  parameters in order to construct $W_{i+1}$ we need to sample from $\pi_i$ without destructing $\pi_i$. For doing this we will describe an algorithm to do amplitude estimation for multiple states without destroying the original superposition . So our complexity is like $\tilde{O}(n^2)$ for the mixing of markov chain $\tilde{O}(n^2)$ samples at each  iteration and $\tilde{O}(n)$ iterations .So in total we have $\tilde{O}({n^5})$ complexity.
+	\subsection{Multidimensional Amplitude Estimation}
+	In order to sample from the states at each iteration we will use the following technique to get the amplitude of each state (here for each hole pattern) using the walk operators. We have the following lemmas  from the paper (multidimamp).
+	\begin{flushleft}
+	First of all we will give some definitions-
+	\begin{definition}[ Quantum Probability Oracle]
+		  Let $p \in \Delta^n$ be a probability distribution. We say that $O_p$ is a quantum probability oracle for $p$ if
+		$$
+		O_p|0\rangle=\sum_{i=1}^n \sqrt{p_i}|i\rangle\left|\psi_i\right\rangle
+		$$
+		for some quantum states $\left|\psi_1\right\rangle, \ldots,\left|\psi_n\right\rangle$. That is, applying $O_p$ to the $|0\rangle$ state and measuring the first register is the same as sampling from $p$.
+	\end{definition}
+ We can't implement quantum probability oracle multiple times we have one copy of the state which we get after applying the probability oracle and the walk operator for which the output of the probability oracle is a unique eigenvector with eigenvalue $1$ on the busy subspace.	
+ So we will modify the main theorem a little bit since we want the theorem to give us answers in terms of quantum walk operator rather than quantum probability oracle.\\
+ \begin{definition}[Oracles for functions]
+ 	Let $f: D \rightarrow[0,1]$ be a $[0,1]$ valued function from a discrete domain D. A probability oracle for the function $f$ is a unitary $U_f$ that acts as
+ 	$$
+ 	\left.U_f|x\rangle 0\right\rangle|0\rangle=|x\rangle\left(\sqrt{f(x)}|1\rangle\left|\psi_1^x\right\rangle+\sqrt{1-f(x)}|0\rangle\left|\psi_0^x\right\rangle\right) .
+ 	$$
+ \end{definition}
+\begin{definition}[Phase oracle]
+	A phase oracle for the function $f$ is a unitary $U_f$ that acts as
+	$$
+	U_f|x\rangle=e^{\mathrm{i} f(x)}|x\rangle .
+	$$
+\end{definition}
+We want to implement phase oracle for the function $\langle x,p\rangle$. Upon implementation of phase oracle we could use the following algorithm to do all state amplitude estimation in one go -\\
+ Let $k=\lceil\log (4 / \varepsilon)\rceil$. Consider the following algorithm:\\
+ \begin{enumerate}
+ 	
+ 
+\item Start in a $n$-register all zero state, where each register as $k$ qubits:
+$$
+\left|0^k\right\rangle \ldots\left|0^k\right\rangle
+$$
+\item Apply Hadamard gates to all qubits to obtain
+$$
+\bigotimes_{i=1}^n\left(\frac{1}{\sqrt{2^k}} \sum_{x_i=0}^{2^k-1}\left|x_i\right\rangle\right)=\frac{1}{2^{k n / 2}} \sum_{x \in\left\{0,2^k-1\right\}^n}|x\rangle
+$$
+\item 
+$$
+\begin{aligned}
+	\frac{1}{2^{k n / 2}} \sum_{x \in\left\{0,2^k-1\right\}^n} e^{\mathbf{i}\langle x, p\rangle}|x\rangle & =\frac{1}{2^{k n / 2}} \sum_{x \in\left\{0,2^k-1\right\}^n} e^{\mathrm{i} \sum_i x_i p_i}|x\rangle \\
+	& =\frac{1}{2^{k n / 2}} \sum_{x \in\left\{0,2^k-1\right\}^n}\left(\prod_{i=1}^n e^{\mathbf{i} x_i p_i}\right)|x\rangle \\
+	& =\bigotimes_{i=1}^n\left(\frac{1}{\sqrt{2^k}} \sum_{x_i=0}^{2^k-1} e^{\mathbf{i} x_i p_i}\left|x_i\right\rangle\right)
+\end{aligned}
+$$
+\item Apply the $k$-qubit inverse QFT to each of the $n$ registers and measure each register.
+\end{enumerate}
+Now we would want to approximately implement the phase oracle given one copy of the distribution state and the walk operator for the distribution.\\
+We have the following algorithm to approximately implement $U_f$ for $f=\langle x,p\rangle$ using $O_p$ as follows
+\begin{lemma}
+ Let $U_p$ be a quantum probability oracle for a distribution $p \in \Delta^n$. Let $k \geq 1$ be an integer and let $D=\left\{0, \frac{1}{2^k}, \ldots, \frac{2^k-1}{2^k}\right\}$ be a discretization of $[0,1]$. Then a probability oracle $U_{\tilde{f}}$ for a function $\tilde{f}$ can be constructed such that $\tilde{f}$ is an additive $\mu$-approximation of $f(x): D^n \rightarrow[0,1]: x \mapsto\langle x, p\rangle$ using 2 queries to $U_p$ and $\widetilde{\mathcal{O}}(n$ polylog $(1 / \mu))$ two-qubit gates .
+\end{lemma}
+\begin{proof}
+ We start in a state $|x\rangle| 0\rangle|0\rangle|0\rangle 0\rangle$. First we apply $U_f \otimes I$ to obtain
+$$
+|x\rangle (\sum_{i=1}^n \sqrt{p_i}|i\rangle|\psi_i\rangle)|0\rangle |0 \rangle 
+$$
+
+Now, for each $i \in[n]$ we do the following conditioned on $i$ being in the second register:
+\begin{enumerate}
+
+
+\item  In the last register, compute an approximation of $2 \arcsin \left(\sqrt{x_i}\right) / \pi$ such that the approximation is in $[0,1)$.
+\item  Conditioned on the first bit of the approximation rotate the second to last register from $|0\rangle$ to $|1\rangle$ over an angle $\pi / 4$.
+\item Continue for the other bits: rotate over an angle $\pi / 8$ conditioned on the second bit, then $\pi / 16$, and so on.
+\item Uncompute the last register.
+
+Note that we can approximate the arcsin very efficiently, only introducing a logarithmic overhead in terms of the precision. In the end the second to last register will be rotated over an angle very close to $2 \arcsin \left(x_i\right) / \pi \times \pi / 2=\arcsin \left(x_i\right)$. We finish the analysis as if the angle was exact. We end up with (after dropping the last register which is now $|0\rangle$ again)
+$$
+|x\rangle \sum_{i=1}^n \sqrt{p_i}|i\rangle |\psi_i\rangle(\sqrt{x_i}|1\rangle+\sqrt{1-x_i}|0\rangle)=|x\rangle \sum_{i=1}^n \sqrt{p_i x_i}|i\rangle| \psi_i\rangle|1\rangle+\ldots|0\rangle .
+$$
+\item The $\ell_2$-norm of the $|1\rangle$ part of the state is $\sqrt{\sum_{i=1}^n \sqrt{p_i x_i}}=\sqrt{\langle x, p\rangle}$. We conclude that the state can be written as
+$$
+\sqrt{\langle x, p\rangle}|x\rangle|\psi_{x, 1}\rangle| 1\rangle+\sqrt{1-\langle x, p\rangle}|x\rangle|\psi_{x, 0}\rangle| 0\rangle,
+$$
+and hence we have implemented a probability oracle for $f$.
+Now let the steps of the above algorithm after construction of $|x\rangle (\sum_{i=1}^n \sqrt{p_i}|i\rangle|\psi_i\rangle)|0\rangle| 0 \rangle 
+$ be denoted by $Q$.
+\end{enumerate}
+\end{proof}
+\break
+Now we will use the following theorem from (tophase) -
+\begin{theorem}
+	Let $p: X \rightarrow[0,1]$, and suppose $U_p: \mathcal{H} \otimes \mathcal{H}_{\text {aux. }} \rightarrow \mathcal{H} \otimes \mathcal{H}_{\text {aux. }}$ is a probability oracle with an n-qubit auxiliary Hilbert space $\mathcal{H}_{\text {aux. }}=\mathbb{C}^{2^n}$. Let $\varepsilon \in(0,1 / 3)$, then we can implement an $\varepsilon$-approximate phase oracle $O$ such that for any phase oracle $\mathrm{O}_p$ and for all $|\psi\rangle \in \mathcal{H}$
+	$$
+	\| O|\psi\rangle|0\rangle^{\otimes(n+a)}-\mathrm{O}_p|\psi\rangle|0\rangle^{\otimes(n+a)} \| \leq \varepsilon,
+	$$
+	using $\mathcal{O}(\log (1 / \varepsilon))$ applications of $U_p$ and $U_p^{\dagger}$, with $a=\mathcal{O}(\log \log (1 / \varepsilon))$.
+	
+\end{theorem}
+Note that in the above paper we use $U_p$ and $U_p^{\dagger}$ in the form of $$
+G_U= (2\Pi_1 -1)U_p^{\dagger}(2\Pi_2-1)U_p$$
+where $\Pi_1=(I\tensor(|0\rangle\langle0|)^{\tensor n})$ and $\Pi_2= I\tensor( I_{n-1} \tensor |1\rangle \langle1|)$
+
+	\end{flushleft}
+	
+\begin{flushleft}
+	From the paper we need to implement powers of $G_U$ on the register $|x\rangle |\vec{0}\rangle$ .
+\end{flushleft}
+Now consider $H$ to be the quantum operator $H=U_p(2\Pi_1-I) U_p^{\dagger}(2\pi_2 -I)$
+Now note that $G^m |x\rangle |\vec{0}\rangle = U_p^{\dagger} H^m (U_p |x\rangle |\vec{0}\rangle )$. Since we intially have $U_p|x\rangle |\vec{0}\rangle$ prepared for us upon application of powers of $H$ and implementing their powers of sum we get $e^{i \langle x,p \rangle} U_p |x\rangle |\vec{0}\rangle $ in approximation. So now we could uncompute the bits used in Lemma 4.1 and apply quantum phase estimation on the register of $|x\rangle$ as mentioned earlier then measure to get approximation for $p_i's$ then after measurment we will be left with  the probability distribution state in the remaining register which we can reuse for sampling and computing mean of $\lambda_{i+1}/ \lambda_i$ (using non destructive method mentioned below) and also for the construction of stationary distribution for next iteration.
+Now in order to implement $H$ we need to implement $U_p(2\Pi_1-I) U_p^{\dagger}$ which we can easily do using the walk operator $W$ by doing phase estimation using $W$ and reflecting controlled on the phase to be equal to $0$ then doing inverse of phase estimation. To do this we need to apply  $W$ $\tilde{O}(1/\sqrt{\delta})$ which in our case is $\tilde{O}(n^2)$ many times. So we get the following version of the theorem from (multidimamp) paper.
+\begin{theorem}
+	 Let $p \in \Delta^n$ and let $U_p$ be a quantum probability oracle acting on $q$ qubits for p. Let $\varepsilon>0$. An approximation $\tilde{p}$ such that $\|p-\tilde{p}\|_{\infty} \leq \varepsilon$ can be found with error probability at most $\delta$ using $\mathcal{O}(\ln (n / \delta) / \varepsilon \cdot \frac{1}{\sqrt{\Delta}})$ applications of $W$ and $\widetilde{\mathcal{O}}(\ln (\delta) q n / \varepsilon)$ two-qubit gates. Where $\Delta$ is the spectral gap of the markov chain classically, whose walk operator is $W$.
+\end{theorem}
+\end{flushleft} 
+	\subsection{Non-destructive Amplitude Estimation}
+\begin{lemma}
+	 Consider a quantum algorithm that consists of applying a unitary $U$ on a state $|\psi\rangle|0\rangle^{\otimes k}$ and measuring the last $k$ qubits in the standard basis. Let $\pi(1), \ldots, \pi\left(2^k\right)$ denotes the probabilities of measuring the outcomes $1, \ldots, 2^k$ respectively. Then, given a lower bound $\lambda \leq \sum_{i=1}^{2^k} \pi(i)^2$ and a success parameter $\eta \in(0,1)$, one can sample $i \in\left\{1, \ldots, 2^k\right\}$ from the distribution
+	$$
+	i \sim \frac{\pi(i)^2}{\sum_{j=1}^{2^k} \pi(j)^2}
+	$$
+	and restore the state $|\psi\rangle$ with probability at least $1-\eta$ by using $O(\log (1 / \eta) / \sqrt{\lambda})$ applications of $U, U^{\dagger}$ and $\mathbb{I}-2|\psi\rangle\langle\psi|$.
+\end{lemma}
+\begin{proof}
+	Proof. Let $U\left(|\psi\rangle|0\rangle^{\otimes k}\right)=\sum_i \alpha_i\left|\psi_i\right\rangle|i\rangle$ denote the state computed by the unitary $U$. Define the "uncomputation" unitary $U_{\text {uncomp }}=\left(U^{\dagger} \otimes \mathbb{I}_{\mathbb{C}^2 k}\right)\left(\mathbb{I}_{\mathcal{H}} \otimes \mathrm{CNOT}\right)\left(U \otimes \mathbb{I}_{\mathbb{C}^2 k}\right)$ that consists of running $U$, copying the output register into a new register and running the inverse $U^{\dagger}$. Then, the amplitude of $|\psi\rangle|0\rangle|i\rangle$ in the state obtained by applying $U_{\text {uncomp }}$ on $|\psi\rangle|0\rangle^{\otimes k}|0\rangle{ }^{\otimes k}$ is
+$$
+(\langle\psi |\langle0|\langle i|) U_{\text {uncomp }}(|\psi\rangle|0\rangle|0\rangle)=(\sum _ { j } \alpha _ { j } ^ { * } \langle\psi _ { j } |\langle j|\langle i|)(\sum_j \alpha_j|\psi_j\rangle|j\rangle|j\rangle)=|\alpha_i|^2=\pi(i) 
+$$
+
+We run fixed-point amplitude amplification [YLC14] on the projector $\Pi=|\psi\rangle\langle\psi|\otimes| 0\rangle\langle 0| \otimes \mathbb{I}$ and the state $U_{\text {uncomp }}\left(|\psi\rangle|0\rangle|0\rangle\right.$, using the amplitude lower bound $\| \Pi U_{\text {uncomp }}(|\psi\rangle|0\rangle|0\rangle) \|^2 \geq \lambda$ and the amplification parameter $\eta$. The probability of measuring $|\psi\rangle|0\rangle$ in the first two registers of the resulting state is at least $1-\eta$, in which case the last register collapses to $\frac{1}{\sqrt{\sum_i \pi(i)^2}} \sum_i \pi(i)|i\rangle$. Thus, we can restore $|\psi\rangle$ and sample $i \sim \frac{\pi(i)^2}{\sum_j \pi(i)^2}$ (by measuring the last register) with success probability at least $1-\eta$. The algorithm requires $O(\log (1 / \eta) / \sqrt{\lambda})$ applications of (controlled) $U_{\text {uncomp }}, U_{\text {uncomp }}^{\dagger}, \mathbb{I}-2 \Pi$ and $\mathbb{I}-2|\psi\rangle\langle\psi|$.Proof. Let $U\left(|\psi\rangle|0\rangle^{\otimes k}\right)=\sum_i \alpha_i\left|\psi_i\right\rangle|i\rangle$ denote the state computed by the unitary $U$. Define the "uncomputation" unitary $U_{\text {uncomp }}=\left(U^{\dagger} \otimes \mathbb{I}_{\mathbb{C}^2 k}\right)\left(\mathbb{I}_{\mathcal{H}} \otimes \mathrm{CNOT}\right)\left(U \otimes \mathbb{I}_{\mathbb{C}^2 k}\right)$ that consists of running $U$, copying the output register into a new register and running the inverse $U^{\dagger}$. Then, the amplitude of $|\psi\rangle|0\rangle|i\rangle$ in the state obtained by applying $U_{\text {uncomp }}$ on $|\psi\rangle|0\rangle^{\otimes k}|0\rangle{ }^{\otimes k}$ is
+	$$
+	(\langle\psi | \langle0| \langle i|) U_{\text {uncomp }}(|\psi\rangle|0\rangle|0\rangle)=(\sum _ { j } \alpha _ { j } ^ { * } \langle\psi _ { j } |\langle j|\langle i|)(\sum_j \alpha_j|\psi_j\rangle|j\rangle|j\rangle)=|\alpha_i |^2=\pi(i) 
+	$$
+	
+	We run fixed-point amplitude amplification [YLC14] on the projector $\Pi=|\psi\rangle\langle\psi|\otimes| 0\rangle\langle 0| \otimes \mathbb{I}$ and the state $U_{\text {uncomp }}\left(|\psi\rangle|0\rangle|0\rangle\right.$, using the amplitude lower bound $\| \Pi U_{\text {uncomp }}(|\psi\rangle|0\rangle|0\rangle) \|^2 \geq \lambda$ and the amplification parameter $\eta$. The probability of measuring $|\psi\rangle|0\rangle$ in the first two registers of the resulting state is at least $1-\eta$, in which case the last register collapses to $\frac{1}{\sqrt{\sum_i \pi(i)^2}} \sum_i \pi(i)|i\rangle$. Thus, we can restore $|\psi\rangle$ and sample $i \sim \frac{\pi(i)^2}{\sum_j \pi(i)^2}$ (by measuring the last register) with success probability at least $1-\eta$. The algorithm requires $O(\log (1 / \eta) / \sqrt{\lambda})$ applications of (controlled) $U_{\text {uncomp }}, U_{\text {uncomp }}^{\dagger}, \mathbb{I}-2 \Pi$ and $\mathbb{I}-2|\psi\rangle\langle\psi|$.
+\end{proof}
+\begin{lemma}
+	 Let $|\psi\rangle$ be a quantum state and $\Pi$ be a projection operator with $p=\| \Pi|\psi\rangle \|^2$. Given $t \geq 1$ and $\eta \in(0,1 / 2)$, the nondestructive amplitude estimation algorithm Nd-Amplitude $(|\psi\rangle, \Pi, t, \eta)$ outputs an estimate $\widetilde{p} \in(0,1)$ such that
+$$
+|\widetilde{p}-p|<\frac{\sqrt{p(1-p)}}{t}+\frac{1}{t^2}
+$$
+with probability at least $1-\eta$. Moreover, if $p \leq 1 /\left(4 t^2\right)$ then it outputs $\widetilde{p}=0$ with probability at least $1-\eta$. The algorithm needs one copy of $|\psi\rangle$, which is restored at the end of the computation with probability at least $1-\eta$, and $O(t \log (1 / \eta))$ applications of the reflection operators $\mathbb{I}-2|\psi\rangle\langle\psi|$ and $\mathbb{I}-2 \Pi$.
+\end{lemma}
+\begin{proof}
+Proof. The standard analysis of the amplitude estimation algorithm (Theorems 11 and 12 in [BHMT02]) shows that, after $t$ steps, it outputs with probability at least $8 / \pi^2$ one of two values $\widetilde{p} \in\left\{\widetilde{p}_1, \widetilde{p}_2\right\}$ that both satisfy $\left|\widetilde{p}_i-p\right|<2 \pi \frac{\sqrt{p(1-p)}}{t}+\frac{\pi^2}{t^2}$. Moreover, if $p \leq 1 /\left(4 t^2\right)$ then the probability to output $\widetilde{p}=0$ is at least $8 / \pi^2$. Thus, by taking the median of $O(\log (1 / \eta))$ independent runs of amplitude estimation, we obtain $\widetilde{p} \in\left\{\widetilde{p}_1, \widetilde{p}_2\right\}$, or $\widetilde{p}=0$ when $p \leq 1 /\left(4 t^2\right)$, with probability at least $1-\eta / 2$. We apply the amplified uncomputation result (Lemma 4.4) on this algorithm with amplitude lower bound $\lambda=1 / 8$ and success parameter $\eta / 2$. If the algorithm succeeds, the probability to sample $\widetilde{p} \in\left\{\widetilde{p}_1, \widetilde{p}_2\right\}$ is at least $\frac{2(1 / 2-\eta / 4)^2}{2(1 / 2-\eta / 4)^2+(\eta / 2)^2} \geq 1-\eta / 2$, and when $p \leq 1 /\left(4 t^2\right)$ the probability of $\widetilde{p}=0$ is at least $\frac{(1-\eta / 2)^2}{(1-\eta / 2)^2+(\eta / 2)^2} \geq 1-\eta / 2$.
+\end{proof}
+ We will use this version of non-destructive amplitude estimation in order to  get  the mean of the $\Lambda_{i+1}/\Lambda_{i} $ before preparing the stationary distribution for the next iteration.
+ So finally, we will have all the estimates that we use in the classical algorithm so we will now just multiply the ratios to get the final answer.

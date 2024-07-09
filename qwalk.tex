@@ -421,7 +421,11 @@ Now the implementation of the paper is as follows.
 	z_{i j} \equiv\left\{1, e^{-\beta\left(E_j-E_i\right)}\right\}
 	$$
 	
-	This creates a state as described by definition of $U_X$.
+	This creates a state as described by definition of $U_X$.\\
+	\begin{flushleft}
+		For our use we will have $|q\rangle \equiv |M_q\rangle |M_q\rangle |0\rangle$ where $|M_q\rangle$ will have $n\lceil\log(n)\rceil$ quibits where we will have $n$ registers of $\lceil\log(n)\rceil$ quibits representing if register $i$ has $|j\rangle$  on it then in the matching $M_q$ the $i$ th vertex in left bipartition is connected to the $j$ th vertex in the right bipartition. For us $|\varphi_i\rangle=|\tilde{\varphi_i}\rangle=|M_i\rangle $ as described above. And for implementing the kick operator we could have an extra register. Now when we want to apply kick operator on $|M_i\rangle|M_i\rangle|0\rangle$ to get $|M_i\rangle\sum_j \alpha_{ij}|M_j\rangle |0\rangle$ we could just use an ancilla and apply $H $ gate on that ancilla to get a superposition over all outcomes of a random coin toss as described in the classical algorithm and according to it we will modify the second register to get $M_j$ from $M_i$ according to the toss outcome then we will uncompute the ancilla register using $|M_i\rangle$ and $|M_j\rangle$.
+	\end{flushleft}
+
 	
 \end{flushleft}
 
